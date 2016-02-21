@@ -6,8 +6,8 @@
 
     <groupId>org.kaleta</groupId>
     <artifactId>lolstats</artifactId>
-    <version>1.7.1</version>
-
+    <version>2.0-snapshot</version>
+    <!--TODO update pom - dependencies etc.-->
     <dependencies>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
@@ -47,7 +47,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.kaleta.lolstats.GUI</mainClass>
+                            <mainClass>org.kaleta.lolstats.ex.GUI</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
