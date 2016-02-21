@@ -1,0 +1,33 @@
+
+DO VERZIE 2.0:
+ * vyuzit viac dat z lol API
+
+ * updatnut schemu tak aky lepsie odpovedala datam (pr.: datum z 01012010 na 1-1-2010)
+      + JAXB mnger
+      + 2: <record game"{game number:required}">
+             <definition date="" role="" champ="">
+             <result lp="" ratio="" result="">
+             <info length="" ...>
+             <performance score="" cs="" gold="">
+             <...>
+             <other teamfb="">
+
+ * lepsie GUI (pridavanie record) tak aby lepsie odpovedal datam (pr.: odstranit textFieldy kde to ide) !viac uz. privetive, (automaticky predvyplnit game number)
+    + moznost pozerat historiu hier;
+    + mainFrame - tlacidla - add record, show analytics (zatial len aktualnu sezonu), show match history (a tie budu velke okna)
+
+ * vylepsit aktualne grafy(v role grafe sortovat aj podla ostatnych riadkov, tooltips(exact value - x,y))
+	- role graph -> champ graph(rovnake podmienky pre performance)
+	- novy role graph - kazda rola ine podmienky na performance
+	- LP graph per date dorobit
+	- porozmyslat nad dalsimi grafmi
+
+ * BUG FIX (zmena v match history pdf (draf mode or wtf, mozno aj dalsie zmeny))
+
+ * pridat dalsie ikonky pre champv + ikonku pre celu appku(L)
+    - try ImageIcon class to load icons (new ImageIcon(path))
+
+
+
+DALSIE:
+ * champ/role management (prefered,vykon,poznamky,...)
