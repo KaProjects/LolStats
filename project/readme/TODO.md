@@ -1,7 +1,5 @@
 # Versions
 ## 2.0
- * vyuzit viac dat z lol API
- * JAXB mnger
  * lepsie GUI (pridavanie record) tak aby lepsie odpovedal datam (pr.: odstranit textFieldy kde to ide) !viac uz. privetive, (automaticky predvyplnit game number)
     + moznost pozerat historiu hier;
     + mainFrame - tlacidla - add record, show analytics, show match history (a tie budu velke okna)
