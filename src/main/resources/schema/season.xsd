@@ -6,88 +6,22 @@
                 <xs:element name="game" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="result" minOccurs="1" maxOccurs="1">
+                            <xs:element name="rank" minOccurs="1" maxOccurs="1">
                                 <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="team-diff" minOccurs="1" maxOccurs="1">
-                                            <xs:complexType>
-                                                <xs:attribute name="kills-diff" type="xs:string" use="required"/>
-                                                <xs:attribute name="farm-diff" type="xs:string" use="required"/>
-                                                <xs:attribute name="gold-diff" type="xs:string" use="required"/>
-                                                <xs:attribute name="total-dmg-diff" type="xs:string" use="required"/>
-                                                <xs:attribute name="champ-dmg-diff" type="xs:string" use="required"/>
-                                                <xs:attribute name="drake-diff" type="xs:string" use="required"/>
-                                                <xs:attribute name="nashor-diff" type="xs:string" use="required"/>
-                                                <xs:attribute name="turret-diff" type="xs:string" use="required"/>
-                                                <xs:attribute name="inhibitor-diff" type="xs:string" use="required"/>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="rank" minOccurs="1" maxOccurs="1">
-                                            <xs:complexType>
-                                                <xs:attribute name="tier" type="xs:string" use="required"/>
-                                                <xs:attribute name="division" type="xs:string" use="required"/>
-                                                <xs:attribute name="lp" type="xs:string" use="required"/>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                    <xs:attribute name="win" type="xs:string" use="required"/>
-                                    <xs:attribute name="length" type="xs:string" use="required"/>
-                                    <xs:attribute name="first-blood" type="xs:string" use="required"/>
+                                    <xs:attribute name="tier" type="xs:string" use="required"/>
+                                    <xs:attribute name="division" type="xs:string" use="required"/>
+                                    <xs:attribute name="lp" type="xs:string" use="required"/>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="performance" minOccurs="1" maxOccurs="1">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="dmg" minOccurs="1" maxOccurs="1">
-                                            <xs:complexType>
-                                                <xs:attribute name="total-dmg-absolute" type="xs:string" use="required"/>
-                                                <xs:attribute name="total-dmg-team-relative" type="xs:string" use="required"/>
-                                                <xs:attribute name="champ-dmg-absolute" type="xs:string" use="required"/>
-                                                <xs:attribute name="champ-dmg-team-relative" type="xs:string" use="required"/>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="score" minOccurs="1" maxOccurs="1">
-                                            <xs:complexType>
-                                                <xs:attribute name="kills-absolute" type="xs:string" use="required"/>
-                                                <xs:attribute name="kills-team-relative" type="xs:string" use="required"/>
-                                                <xs:attribute name="deaths-absolute" type="xs:string" use="required"/>
-                                                <xs:attribute name="deaths-team-relative" type="xs:string" use="required"/>
-                                                <xs:attribute name="assists-absolute" type="xs:string" use="required"/>
-                                                <xs:attribute name="assists-team-relative" type="xs:string" use="required"/>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="farm" minOccurs="1" maxOccurs="1">
-                                            <xs:complexType>
-                                                <xs:attribute name="farm-absolute" type="xs:string" use="required"/>
-                                                <xs:attribute name="farm-team-relative" type="xs:string" use="required"/>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="wards" minOccurs="1" maxOccurs="1">
-                                            <xs:complexType>
-                                                <xs:attribute name="ward-placed" type="xs:string" use="required"/>
-                                                <xs:attribute name="ward-destroyed" type="xs:string" use="required"/>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="multi-kills" minOccurs="1" maxOccurs="1">
-                                            <xs:complexType>
-                                                <xs:attribute name="double" type="xs:string" use="required"/>
-                                                <xs:attribute name="triple" type="xs:string" use="required"/>
-                                                <xs:attribute name="quadra" type="xs:string" use="required"/>
-                                                <xs:attribute name="penta" type="xs:string" use="required"/>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                    <xs:attribute name="first-blood" type="xs:string" use="required"/>
-                                    <xs:attribute name="gold" type="xs:string" use="required"/>
-                                    <xs:attribute name="turrets" type="xs:string" use="required"/>
-                                    <xs:attribute name="killing-spree" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
+                            <xs:element name="user-team" minOccurs="1" maxOccurs="1" type="team"/>
+                            <xs:element name="enemy-team" minOccurs="1" maxOccurs="1" type="team"/>
+                            <xs:element name="user" minOccurs="1" maxOccurs="1" type="player"/>
+                            <xs:element name="user-mate" minOccurs="4" maxOccurs="4" type="player"/>
+                            <xs:element name="opponent" minOccurs="5" maxOccurs="5" type="player"/>
                         </xs:sequence>
                         <xs:attribute name="number" type="xs:string" use="required"/>
                         <xs:attribute name="date" type="xs:string" use="required"/>
-                        <xs:attribute name="role" type="xs:string" use="required"/>
-                        <xs:attribute name="champion" type="xs:string" use="required"/>
+                        <xs:attribute name="length" type="xs:string" use="required"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -95,4 +29,56 @@
             <xs:attribute name="name" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
+
+    <xs:complexType name="team">
+        <xs:attribute name="win" type="xs:string" use="required"/>
+        <xs:attribute name="first-blood" type="xs:string" use="required"/>
+        <xs:attribute name="turrets" type="xs:string" use="required"/>
+        <xs:attribute name="inhibitors" type="xs:string" use="required"/>
+        <xs:attribute name="baron" type="xs:string" use="required"/>
+        <xs:attribute name="dragon" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="player">
+        <xs:sequence>
+            <xs:element name="score" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="multi" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:attribute name="double" type="xs:string" use="required"/>
+                                <xs:attribute name="triple" type="xs:string" use="required"/>
+                                <xs:attribute name="quadra" type="xs:string" use="required"/>
+                                <xs:attribute name="penta" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="kills" type="xs:string" use="required"/>
+                    <xs:attribute name="deaths" type="xs:string" use="required"/>
+                    <xs:attribute name="assists" type="xs:string" use="required"/>
+                    <xs:attribute name="max-killing-spree" type="xs:string" use="required"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dmg" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                    <xs:attribute name="total" type="xs:string" use="required"/>
+                    <xs:attribute name="to-champs" type="xs:string" use="required"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ward" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                    <xs:attribute name="placed" type="xs:string" use="required"/>
+                    <xs:attribute name="destroyed" type="xs:string" use="required"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="champ" type="xs:string" use="required"/>
+        <xs:attribute name="role" type="xs:string" use="required"/>
+        <xs:attribute name="farm" type="xs:string" use="required"/>
+        <xs:attribute name="gold" type="xs:string" use="required"/>
+        <xs:attribute name="fb" type="xs:string" use="required"/>
+        <xs:attribute name="turrets" type="xs:string" use="required"/>
+    </xs:complexType>
+
 </xs:schema>
+

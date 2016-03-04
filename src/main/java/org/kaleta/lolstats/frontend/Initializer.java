@@ -22,10 +22,7 @@ public class Initializer {
             @Override
             public void run() {
                 try {
-
-
-
-
+                    new AppFrame().setVisible(true);
 
 
 

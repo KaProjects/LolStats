@@ -1,5 +1,7 @@
 package org.kaleta.lolstats.ex.entities;
 
+import org.kaleta.lolstats.backend.entity.Role;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Stanislav Kaleta

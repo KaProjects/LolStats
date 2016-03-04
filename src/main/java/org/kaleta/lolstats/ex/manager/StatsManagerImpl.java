@@ -1,5 +1,6 @@
 package org.kaleta.lolstats.ex.manager;
 
+import org.kaleta.lolstats.backend.entity.Role;
 import org.kaleta.lolstats.ex.ServiceFailureException;
 import org.kaleta.lolstats.ex.entities.*;
 import org.w3c.dom.*;

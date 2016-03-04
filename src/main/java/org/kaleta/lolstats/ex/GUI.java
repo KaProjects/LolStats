@@ -1,5 +1,6 @@
 package org.kaleta.lolstats.ex;
 
+import org.kaleta.lolstats.backend.entity.Role;
 import org.kaleta.lolstats.ex.entities.*;
 import org.kaleta.lolstats.ex.graph.GraphFrame;
 import org.kaleta.lolstats.ex.loader.LolApiLoader;

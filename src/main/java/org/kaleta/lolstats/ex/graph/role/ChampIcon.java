@@ -1,7 +1,7 @@
 package org.kaleta.lolstats.ex.graph.role;
 
 import org.kaleta.lolstats.ex.entities.Champion;
-import org.kaleta.lolstats.ex.entities.Role;
+import org.kaleta.lolstats.backend.entity.Role;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
