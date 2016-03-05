@@ -1,6 +1,8 @@
 package org.kaleta.lolstats.backend.service;
 
 import org.eclipse.jetty.util.ajax.JSON;
+import org.kaleta.lolstats.backend.entity.Config;
+import org.kaleta.lolstats.backend.entity.GameInfo;
 import org.kaleta.lolstats.backend.entity.Player;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.frontend.ErrorDialog;
@@ -32,8 +34,12 @@ public class LolApiService {
     private Object[] allPlayerMatches;
     private HashMap<String,String> champsMap;
 
-    public LolApiService(String region, String apiKey, String playerNick) {
+    public LolApiService() {
         //todo ectract this to api manager
+        Config.LolApi apiConfig = new DataSourceService().getLolApiConfig();
+        String region = apiConfig.getRegion();
+        String apiKey = apiConfig.getAccessKey();
+        String playerNick = apiConfig.getNick();
         String protocol = "https://";
         String domain = region + ".api.pvp.net";
         String keyParameter = "?api_key=" + apiKey;
@@ -82,32 +88,42 @@ public class LolApiService {
     }
 
     /**
-     * TODo
-     * @return
+     * TODO doc.
      */
-    public List<Season.Game> getRecentGames() {
+    public List<GameInfo> getRecentRankedGamesInfo() {
         Object[] recentGames = (Object[]) loadData(recentMatchUrl).get("games");
-        List<Season.Game> outputGames = new ArrayList<>();
+        List<GameInfo> retrievedInfos = new ArrayList<>();
         for (int i = 0; i < recentGames.length; i++) {
-            if (!(((HashMap) recentGames[i]).get("subType")).equals("RANKED_SOLO_5x5")) {
-                continue;
+            if ((((HashMap) recentGames[i]).get("subType")).equals("RANKED_SOLO_5x5")) {
+                GameInfo info = new GameInfo();
+                info.setId(String.valueOf(((HashMap)recentGames[i]).get("gameId")));
+                info.setDateInMillis(String.valueOf(((HashMap)recentGames[i]).get("createDate")));
+                info.setWin(String.valueOf(((HashMap)((HashMap)recentGames[i]).get("stats")).get("win")));
+                info.setK(String.valueOf(((HashMap)((HashMap)recentGames[i]).get("stats")).get("championsKilled")));
+                info.setD(String.valueOf(((HashMap)((HashMap)recentGames[i]).get("stats")).get("numDeaths")));
+                info.setA(String.valueOf(((HashMap)((HashMap)recentGames[i]).get("stats")).get("assists")));
+                retrievedInfos.add(info);
             }
-            String gameId = String.valueOf(((HashMap)recentGames[i]).get("gameId"));
-            outputGames.add(getGameById(gameId));
         }
-        return outputGames;
+        return retrievedInfos;
     }
 
-    public Season.Game getGameById(String gameId){
-        if (champsMap == null){
-            champsMap = new HashMap<>();
-            Object[] champList = (Object[]) loadData(champListUrl).get("champions");
-            for (Object champ : champList){
-                String id = String.valueOf(((HashMap) champ).get("id"));
-                HashMap champInfo = loadData(champByIdUrl.replace("{ID}",id));
-                champsMap.put(id, String.valueOf(champInfo.get("name")));
+    /**
+     * TODO doc.
+     */
+    public Season.Game getGameById(String gameId, boolean singleGameRequest){
+        if (!singleGameRequest){
+            if (champsMap == null){
+                champsMap = new HashMap<>();
+                Object[] champList = (Object[]) loadData(champListUrl).get("champions");
+                for (Object champ : champList){
+                    String id = String.valueOf(((HashMap) champ).get("id"));
+                    HashMap champInfo = loadData(champByIdUrl.replace("{ID}",id));
+                    champsMap.put(id, String.valueOf(champInfo.get("name")));
+                }
             }
         }
+
         Season.Game gameOutput = new Season.Game();
         HashMap gameData = loadData(matchByIdUrl.replace("{ID}",gameId));
 
@@ -200,7 +216,11 @@ public class LolApiService {
         gameOutput.getUser().getDmg().setToChamps(String.valueOf(userStats.get("totalDamageDealtToChampions")));
         gameOutput.getUser().getWard().setPlaced(String.valueOf(userStats.get("wardsPlaced")));
         gameOutput.getUser().getWard().setDestroyed(String.valueOf(userStats.get("wardsKilled")));
-        gameOutput.getUser().setChamp(champsMap.get(String.valueOf(user.get("championId"))));
+        if (singleGameRequest){
+            gameOutput.getUser().setChamp(String.valueOf(loadData(champByIdUrl.replace("{ID}",String.valueOf(user.get("championId")))).get("name")));
+        } else {
+            gameOutput.getUser().setChamp(champsMap.get(String.valueOf(user.get("championId"))));
+        }
         gameOutput.getUser().setFarm(String.valueOf(((long) userStats.get("minionsKilled") + (long) userStats.get("neutralMinionsKilled"))));
         gameOutput.getUser().setGold(String.valueOf(userStats.get("goldEarned")));
         gameOutput.getUser().setFb(String.valueOf(userStats.get("firstBloodKill")));
@@ -223,7 +243,11 @@ public class LolApiService {
             player.getDmg().setToChamps(String.valueOf(userMateStats.get("totalDamageDealtToChampions")));
             player.getWard().setPlaced(String.valueOf(userMateStats.get("wardsPlaced")));
             player.getWard().setDestroyed(String.valueOf(userMateStats.get("wardsKilled")));
-            player.setChamp(champsMap.get(String.valueOf(userMate.get("championId"))));
+            if (singleGameRequest){
+                player.setChamp(String.valueOf(loadData(champByIdUrl.replace("{ID}",String.valueOf(userMate.get("championId")))).get("name")));
+            } else {
+                player.setChamp(champsMap.get(String.valueOf(userMate.get("championId"))));
+            }
             player.setFarm(String.valueOf(((long) userMateStats.get("minionsKilled") + (long) userMateStats.get("neutralMinionsKilled"))));
             player.setGold(String.valueOf(userMateStats.get("goldEarned")));
             player.setFb(String.valueOf(userMateStats.get("firstBloodKill")));
@@ -233,28 +257,32 @@ public class LolApiService {
         }
 
 
-        for (HashMap opponentMate : opponents){
-            HashMap opponentMateStats = (HashMap) opponentMate.get("stats");
+        for (HashMap opponent : opponents){
+            HashMap opponentStats = (HashMap) opponent.get("stats");
 
             Player player = new Player();
-            player.getScore().setKills(String.valueOf(opponentMateStats.get("kills")));
-            player.getScore().setDeaths(String.valueOf(opponentMateStats.get("deaths")));
-            player.getScore().setAssists(String.valueOf(opponentMateStats.get("assists")));
-            player.getScore().setMaxKillingSpree(String.valueOf(opponentMateStats.get("largestKillingSpree")));
-            player.getScore().getMulti().setDouble(String.valueOf(opponentMateStats.get("doubleKills")));
-            player.getScore().getMulti().setTriple(String.valueOf(opponentMateStats.get("tripleKills")));
-            player.getScore().getMulti().setQuadra(String.valueOf(opponentMateStats.get("quadraKills")));
-            player.getScore().getMulti().setPenta(String.valueOf(opponentMateStats.get("pentaKills")));
-            player.getDmg().setTotal(String.valueOf(opponentMateStats.get("totalDamageDealt")));
-            player.getDmg().setToChamps(String.valueOf(opponentMateStats.get("totalDamageDealtToChampions")));
-            player.getWard().setPlaced(String.valueOf(opponentMateStats.get("wardsPlaced")));
-            player.getWard().setDestroyed(String.valueOf(opponentMateStats.get("wardsKilled")));
-            player.setChamp(champsMap.get(String.valueOf(opponentMate.get("championId"))));
-            player.setFarm(String.valueOf(((long) opponentMateStats.get("minionsKilled") + (long) opponentMateStats.get("neutralMinionsKilled"))));
-            player.setGold(String.valueOf(opponentMateStats.get("goldEarned")));
-            player.setFb(String.valueOf(opponentMateStats.get("firstBloodKill")));
-            player.setTurrets(String.valueOf(opponentMateStats.get("towerKills")));
-            player.setRole(((HashMap)opponentMate.get("timeline")).get("lane") +" "+((HashMap)opponentMate.get("timeline")).get("role"));
+            player.getScore().setKills(String.valueOf(opponentStats.get("kills")));
+            player.getScore().setDeaths(String.valueOf(opponentStats.get("deaths")));
+            player.getScore().setAssists(String.valueOf(opponentStats.get("assists")));
+            player.getScore().setMaxKillingSpree(String.valueOf(opponentStats.get("largestKillingSpree")));
+            player.getScore().getMulti().setDouble(String.valueOf(opponentStats.get("doubleKills")));
+            player.getScore().getMulti().setTriple(String.valueOf(opponentStats.get("tripleKills")));
+            player.getScore().getMulti().setQuadra(String.valueOf(opponentStats.get("quadraKills")));
+            player.getScore().getMulti().setPenta(String.valueOf(opponentStats.get("pentaKills")));
+            player.getDmg().setTotal(String.valueOf(opponentStats.get("totalDamageDealt")));
+            player.getDmg().setToChamps(String.valueOf(opponentStats.get("totalDamageDealtToChampions")));
+            player.getWard().setPlaced(String.valueOf(opponentStats.get("wardsPlaced")));
+            player.getWard().setDestroyed(String.valueOf(opponentStats.get("wardsKilled")));
+            if (singleGameRequest){
+                player.setChamp(String.valueOf(loadData(champByIdUrl.replace("{ID}",String.valueOf(opponent.get("championId")))).get("name")));
+            } else {
+                player.setChamp(champsMap.get(String.valueOf(opponent.get("championId"))));
+            }
+            player.setFarm(String.valueOf(((long) opponentStats.get("minionsKilled") + (long) opponentStats.get("neutralMinionsKilled"))));
+            player.setGold(String.valueOf(opponentStats.get("goldEarned")));
+            player.setFb(String.valueOf(opponentStats.get("firstBloodKill")));
+            player.setTurrets(String.valueOf(opponentStats.get("towerKills")));
+            player.setRole(((HashMap)opponent.get("timeline")).get("lane") +" "+((HashMap)opponent.get("timeline")).get("role"));
             gameOutput.getOpponent().add(player);
         }
 
@@ -262,9 +290,9 @@ public class LolApiService {
     }
 
     /**
-     * TODO
+     * TODO doc.
      */
-    public List<Season.Game> tryFindGame(int seasonNumber, String date, String[] queues) {
+    public List<Season.Game> tryFindGames(int seasonNumber, String date, String[] queues) {
         if (allPlayerMatches == null) {
             allPlayerMatches = (Object[]) loadData(matchListUrl).get("matches");
         }
@@ -284,7 +312,7 @@ public class LolApiService {
                 if (isQueue){
                     if (date.equals(new SimpleDateFormat("ddMMyyyy").format(((HashMap) allPlayerMatches[g]).get("timestamp")))) {
                         long matchId = (long) ((HashMap) allPlayerMatches[g]).get("matchId");
-                        Season.Game game = getGameById(String.valueOf(matchId));
+                        Season.Game game = getGameById(String.valueOf(matchId),false);
                         outputGames.add(game);
                     }
                 }

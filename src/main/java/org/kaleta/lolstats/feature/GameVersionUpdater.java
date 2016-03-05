@@ -36,8 +36,7 @@ public class GameVersionUpdater {
      */
     public String updateGame_1x_to_2x() throws ManagerException {
         season_2x.getGame().clear();
-        Config.LolApi apiConfig = new DataSourceService().getLolApiConfig();
-        LolApiService apiService = new LolApiService(apiConfig.getRegion(), apiConfig.getAccessKey(), apiConfig.getNick());
+        LolApiService apiService = new LolApiService();
 
         int gameCounter = 0;
         int foundCounter = 0;
@@ -53,7 +52,7 @@ public class GameVersionUpdater {
             if (date.equals(gDate)){
 
             } else {
-                List<Season.Game> foundGames = apiService.tryFindGame(5,date,new String[]{"RANKED_SOLO_5x5","TEAM_BUILDER_DRAFT_RANKED_5x5"});
+                List<Season.Game> foundGames = apiService.tryFindGames(5,date,new String[]{"RANKED_SOLO_5x5","TEAM_BUILDER_DRAFT_RANKED_5x5"});
                 for (GameRecord dbGame : tempGameList){
                     int MatchedGameCounter = 0;
                     Season.Game matchedGame = null;

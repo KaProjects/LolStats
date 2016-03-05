@@ -38,7 +38,7 @@ public class ChampIcon extends JPanel {
         try {
             URL iconUrl = this.getClass().getResource("/icons/"+fileName);
             if (iconUrl == null){
-                icon = ImageIO.read(this.getClass().getResource("/icons/no_icon.png"));
+                icon = ImageIO.read(this.getClass().getResource("/icons/def/no_icon.png"));
             } else {
                 icon = ImageIO.read(iconUrl);
             }

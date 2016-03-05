@@ -20,14 +20,9 @@ import java.util.List;
 @XmlRootElement(name = "config")
 public class Config {
     @XmlElement(name = "lol-api", required = true)
-    protected LolApi lolApi;
+    protected LolApi lolApi= new LolApi();
     @XmlElement(required = true)
-    protected Seasons seasons;
-
-    public Config(){
-        lolApi = new LolApi();
-        seasons = new Seasons();
-    }
+    protected Seasons seasons= new Seasons();
 
     /**
      * Gets the value of the lolApi property.
@@ -81,17 +76,11 @@ public class Config {
     @XmlType(name = "")
     public static class LolApi {
         @XmlAttribute(name = "region", required = true)
-        protected String region;
+        protected String region="";
         @XmlAttribute(name = "nick", required = true)
-        protected String nick;
+        protected String nick="";
         @XmlAttribute(name = "access-key", required = true)
-        protected String accessKey;
-
-        public LolApi(){
-            region = "";
-            nick = "";
-            accessKey = "";
-        }
+        protected String accessKey="";
 
         /**
          * Gets the value of the region property.
@@ -167,65 +156,17 @@ public class Config {
 
     }
 
-
-    /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="season" maxOccurs="unbounded" minOccurs="0">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;attribute name="order" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
         "season"
     })
     public static class Seasons {
 
+        @XmlAttribute(name = "actual-season", required = true)
+        protected String actualSeason="";
+
         protected List<Season> season;
 
-        /**
-         * Gets the value of the season property.
-         * 
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the season property.
-         * 
-         * <p>
-         * For example, to add a new item, do as follows:
-         * <pre>
-         *    getSeason().add(newItem);
-         * </pre>
-         * 
-         * 
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link Season }
-         * 
-         * 
-         */
         public List<Season> getSeason() {
             if (season == null) {
                 season = new ArrayList<Season>();
@@ -233,37 +174,21 @@ public class Config {
             return this.season;
         }
 
+        public String getActualSeason() {
+            return actualSeason;
+        }
 
-        /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
-         * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;attribute name="order" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
-         * </pre>
-         * 
-         * 
-         */
+        public void setActualSeason(String actualSeason) {
+            this.actualSeason = actualSeason;
+        }
+
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Season {
             @XmlAttribute(name = "order", required = true)
-            protected String order;
+            protected String order="";
             @XmlAttribute(name = "id", required = true)
-            protected String id;
-
-            public Season(){
-                order = "";
-                id = "";
-            }
+            protected String id="";
 
             /**
              * Gets the value of the order property.

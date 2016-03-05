@@ -5,7 +5,8 @@ import org.kaleta.lolstats.frontend.common.MenuItemWrapper;
 import org.kaleta.lolstats.frontend.component.GameTrackingPanel;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -13,33 +14,44 @@ import java.awt.event.KeyEvent;
  * Created by Stanislav Kaleta on 19.02.2016.
  */
 public class AppFrame extends JFrame implements Configuration {
-    private GameTrackingPanel gameTrackingPanel;
+
     public AppFrame(){
-        gameTrackingPanel = new GameTrackingPanel();
-        initComponents();
-        initMenuBar();
+
+        GameTrackingPanel gameTrackingPanel = new GameTrackingPanel();
+        initMenuBar(gameTrackingPanel);
+        initComponents(gameTrackingPanel);
+
+
+
+
+        this.pack();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = this.getSize();
+        int centerPosX = (screenSize.width - frameSize.width) / 2;
+        int centerPosY = (screenSize.height - frameSize.height) / 2;
+        this.setLocation(centerPosX, centerPosY);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    private void initComponents(){
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    private void initComponents(JPanel gameTrackingPanel){
+
+
+
+
+
         this.getContentPane().add(gameTrackingPanel);
     }
 
-    private void initMenuBar() {
+    private void initMenuBar(GameTrackingPanel gameTrackingPanel) {
         JMenuBar menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
 
         JMenu fileMenu = new JMenu("File");
         fileMenu.setMnemonic(KeyEvent.VK_F);
         menuBar.add(fileMenu);
-        JMenu newMenu = new JMenu("New");
+        JMenu newMenu = new JMenu("Add");
         fileMenu.add(newMenu);
-        newMenu.add(new MenuItemWrapper(new AbstractAction("something") {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-
-            }
-        }, "NOT_IMPLEMENTED"));
+        newMenu.add(new MenuItemWrapper(new OpenAddGameDialog(this), "NOT_IMPLEMENTED"));//todo tooltip
         fileMenu.add(new JSeparator());
         fileMenu.add(new MenuItemWrapper(new OpenSettingsDialog(this),
                 KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.SHIFT_MASK + InputEvent.CTRL_MASK)));
@@ -54,3 +66,4 @@ public class AppFrame extends JFrame implements Configuration {
         gameMenu.add(new MenuItemWrapper(new AddRecentGame(this),"NOT_IMPLEMENTED"));//TODO tooltip
     }
 }
+;

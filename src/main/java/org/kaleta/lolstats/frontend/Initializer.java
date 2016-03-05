@@ -1,5 +1,7 @@
 package org.kaleta.lolstats.frontend;
 
+import org.kaleta.lolstats.backend.entity.Role;
+
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -23,9 +25,8 @@ public class Initializer {
             public void run() {
                 try {
                     new AppFrame().setVisible(true);
-
-
-
+                    
+                    
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -17,8 +17,7 @@ import org.kaleta.lolstats.frontend.Initializer;
 public class DataSourceService {
 
     /**
-     *
-     * @return
+     * TODo doc.
      */
     public Config.LolApi getLolApiConfig(){
         try {
@@ -31,8 +30,7 @@ public class DataSourceService {
     }
 
     /**
-     *
-     * @param name
+     * TODo doc.
      */
     public void createSeason(String name){
         try {
@@ -60,5 +58,32 @@ public class DataSourceService {
             Initializer.LOG.severe(ErrorDialog.getExceptionStackTrace(e));
             throw new ServiceFailureException(e);
         }
+    }
+
+    /**
+     * TODo doc.
+     */
+    public static void addNewGame(int seasonNumber, Season.Game game){
+        // TODO: 3/5/16 impl.
+    }
+
+    /**
+     * TODo doc.
+     */
+    public static Season.Game.Rank getLastInsertedRank(){
+        // TODO: 3/5/16 impl.
+        Season.Game.Rank rank = new Season.Game.Rank();
+        rank.setTier("PLATINUM");
+        rank.setDivision("III");
+        rank.setLp("90");
+        return rank;
+    }
+
+    /**
+     * TODo doc.
+     */
+    public static Integer getLastInsertedGameNumber(){
+        // TODO: 3/5/16 impl.
+        return 98;
     }
 }
