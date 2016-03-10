@@ -4,7 +4,7 @@ package org.kaleta.lolstats.backend.entity;
  * Created by Stanislav Kaleta on 03.03.2016.
  */
 public enum Role {
-    adc, support, mid, top, jungle, UNDEFINED,;
+    adc, support, mid, top, jungle, UNDEFINED;
 
     public static Role getRoleByApi(String line, String role){
         if (line.equals("MIDDLE") && role.equals("SOLO")){

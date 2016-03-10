@@ -21,18 +21,24 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer{
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         ImageIcon icon = null;
         String text = null;
-        switch (type) {
-            case 0:
-                icon = IconLoader.getTierIcon(((String) value).toLowerCase());
-                text = String.valueOf(value);
-                break;
-            case 1:
-                text = " " + String.valueOf(value);
-                break;
+        if (value != null){
+            switch (type) {
+                case 0:
+                    icon = IconLoader.getTierIcon(((String) value).toLowerCase());
+                    text = String.valueOf(value);
+                    break;
+                case 1:
+                    text = String.valueOf(value);
+                    break;
 
+            }
+            setIcon(icon);
+            setText(text);
+        } else {
+            setIcon(null);
+            setText(null);
         }
-        setIcon(icon);
-        setText(text);
+
         return this;
     }
 }

@@ -76,7 +76,7 @@ public class DataSourceService {
         rank.setTier("PLATINUM");
         rank.setDivision("III");
         rank.setLp("90");
-        return rank;
+        return null;
     }
 
     /**
@@ -84,6 +84,6 @@ public class DataSourceService {
      */
     public static Integer getLastInsertedGameNumber(){
         // TODO: 3/5/16 impl.
-        return 98;
+        return 0;
     }
 }

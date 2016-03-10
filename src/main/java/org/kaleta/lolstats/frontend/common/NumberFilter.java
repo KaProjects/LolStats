@@ -27,11 +27,16 @@ public class NumberFilter extends DocumentFilter {
     }
 
     private boolean test(String text) {
-        try {
-            Integer.parseInt(text);
+        if(text.equals("")){
             return true;
-        } catch (NumberFormatException e) {
-            return false;
+        } else {
+            try {
+
+                Integer.parseInt(text);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
         }
     }
 

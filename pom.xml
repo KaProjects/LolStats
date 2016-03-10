@@ -19,6 +19,11 @@
             <artifactId>jetty-util-ajax</artifactId>
             <version>9.0.0.M0</version>
         </dependency>
+        <dependency>
+            <groupId>org.sonatype.oss</groupId>
+            <artifactId>oss-parent</artifactId>
+            <version>9</version>
+        </dependency>
     </dependencies>
 
     <build>
