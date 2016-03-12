@@ -35,7 +35,7 @@ public class AddRecentGameDialog extends JDialog{
             List<JPanel> panels = new ArrayList<>();
             for (GameInfo info : service.getRecentRankedGamesInfo()){
                 Season.Game game = service.getGameById(info.getId(),true);
-                RecentGamePanel panel = new RecentGamePanel(game);
+                RecentGamePanel panel = new RecentGamePanel(game,parent);
                 panels.add(panel);
             }
             panelGames.removeAll();

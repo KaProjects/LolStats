@@ -5,6 +5,8 @@ import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.Configuration;
 import org.kaleta.lolstats.frontend.dialog.AddGameDialog;
 
+import java.awt.Component;
+
 /**
  * Created by Stanislav Kaleta on 05.03.2016.
  */
@@ -15,7 +17,7 @@ public class OpenAddGameDialog extends MenuAction{
 
     @Override
     protected void actionPerformed() {
-        AddGameDialog dialog = new AddGameDialog();
+        AddGameDialog dialog = new AddGameDialog((Component) getConfiguration());
         dialog.setVisible(true);
         if (dialog.getResult()){
             Season.Game newGame = dialog.getGame();

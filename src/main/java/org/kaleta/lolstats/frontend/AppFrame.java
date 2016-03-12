@@ -6,6 +6,7 @@ import org.kaleta.lolstats.frontend.common.MenuItemWrapper;
 import org.kaleta.lolstats.frontend.component.GameTrackingPanel;
 
 import javax.swing.*;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
@@ -18,7 +19,7 @@ public class AppFrame extends JFrame implements Configuration {
 
     public AppFrame(){
 
-        GameTrackingPanel gameTrackingPanel = new GameTrackingPanel();
+        GameTrackingPanel gameTrackingPanel = new GameTrackingPanel(this);
         initMenuBar(gameTrackingPanel);
         initComponents(gameTrackingPanel);
 
@@ -37,11 +38,12 @@ public class AppFrame extends JFrame implements Configuration {
 
     private void initComponents(JPanel gameTrackingPanel){
 
-
-
-
-
         this.getContentPane().add(gameTrackingPanel);
+
+        JTextField textField = new JTextField();
+        textField.setBackground(Color.CYAN);
+
+
     }
 
     private void initMenuBar(GameTrackingPanel gameTrackingPanel) {

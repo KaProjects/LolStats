@@ -6,6 +6,7 @@ import org.kaleta.lolstats.frontend.dialog.AddGameDialog;
 
 import javax.swing.*;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,8 +18,10 @@ public class RecentGamePanel extends JPanel {
     private Font font = new Font(new JLabel().getFont().getName(),Font.BOLD,15);
     private boolean added = false;
 
-    public RecentGamePanel(final Season.Game game){
-        JLabel labelInfo = new JLabel(game.getUser().getChamp());
+    public RecentGamePanel(final Season.Game game, Component parent){
+        String labelText = game.getUser().getChamp() + " " + game.getUser().getScore().getKills()+":"
+                + game.getUser().getScore().getDeaths()+":"+game.getUser().getScore().getAssists();
+        JLabel labelInfo = new JLabel(labelText);
         labelInfo.setFont(font);
 
         this.add(labelInfo);
@@ -28,7 +31,7 @@ public class RecentGamePanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (!added){
-                    AddGameDialog dialog = new AddGameDialog();
+                    AddGameDialog dialog = new AddGameDialog(parent);
                     dialog.setUpDialog(game);
                     dialog.setVisible(true);
                     if (dialog.getResult()){

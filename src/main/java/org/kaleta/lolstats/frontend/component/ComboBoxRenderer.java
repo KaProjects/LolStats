@@ -3,14 +3,15 @@ package org.kaleta.lolstats.frontend.component;
 import org.kaleta.lolstats.frontend.common.IconLoader;
 
 import javax.swing.*;
+import java.awt.Color;
 import java.awt.Component;
 
 /**
  * Created by Stanislav Kaleta on 05.03.2016.
  */
 public class ComboBoxRenderer extends JLabel implements ListCellRenderer{
-    public static final int TIER = 0;
-    public static final int DIVISION = 1;
+    public static final int ICON_AND_TEXT = 0;
+    public static final int TEXT_ONLY = 1;
     private int type;
 
     public ComboBoxRenderer(int type){
@@ -30,7 +31,6 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer{
                 case 1:
                     text = String.valueOf(value);
                     break;
-
             }
             setIcon(icon);
             setText(text);
@@ -38,7 +38,8 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer{
             setIcon(null);
             setText(null);
         }
-
+        setBackground(Color.WHITE);
+        setOpaque(true);
         return this;
     }
 }

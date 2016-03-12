@@ -7,9 +7,12 @@ import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.common.NumberFilter;
 import org.kaleta.lolstats.frontend.component.ComboBoxRenderer;
+import org.kaleta.lolstats.frontend.component.InputNumberField;
 
 import javax.swing.*;
 import javax.swing.text.PlainDocument;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -53,26 +56,23 @@ public class AddGameDialog extends JDialog {
 
     private boolean result;
 
-    public AddGameDialog(){
+    public AddGameDialog(Component parent){
         result = false;
         this.setTitle("Add Game");
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        initComponents();
         this.setModal(true);
+        this.setLocationRelativeTo(parent);
+        initComponents();
         this.pack();
     }
 
     private void initComponents() {
         Font labelFont = new Font(Font.DIALOG, Font.BOLD, 15);
-        Font textFieldFont = new Font(Font.DIALOG, Font.BOLD, 20);
 
         JLabel labelGameNumber = new JLabel("Game Number:");
         labelGameNumber.setFont(labelFont);
-        textFieldGameNumber = new JTextField();
-        textFieldGameNumber.setFont(textFieldFont);
-        textFieldGameNumber.setHorizontalAlignment(JTextField.CENTER);
+        textFieldGameNumber = new InputNumberField();
         textFieldGameNumber.setText(String.valueOf(DataSourceService.getLastInsertedGameNumber() + 1));
-        ((PlainDocument) textFieldGameNumber.getDocument()).setDocumentFilter(new NumberFilter());
 
         JLabel labelDate = new JLabel("Date:");
         labelDate.setFont(labelFont);
@@ -80,9 +80,7 @@ public class AddGameDialog extends JDialog {
 //        ComponentColorDefaults.getInstance().setColor(ComponentColorDefaults.Key.BG_MONTH_SELECTOR, Color.LIGHT_GRAY);
 //        datePicker = new JDatePicker(new Date(System.currentTimeMillis()));
 //        datePicker.getComponent(0).setFont(textFieldFont);
-        tfDatePicker = new JTextField();
-        tfDatePicker.setFont(textFieldFont);
-        tfDatePicker.setHorizontalAlignment(JTextField.CENTER);
+        tfDatePicker = new InputNumberField();
 
         JLabel labelTier = new JLabel("Tier:");
         labelTier.setFont(labelFont);
@@ -91,7 +89,7 @@ public class AddGameDialog extends JDialog {
         JLabel labelLp = new JLabel("LP:");
         labelLp.setFont(labelFont);
         comboBoxTier = new JComboBox<>(new String[]{"Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"});
-        comboBoxTier.setRenderer(new ComboBoxRenderer(ComboBoxRenderer.TIER));
+        comboBoxTier.setRenderer(new ComboBoxRenderer(ComboBoxRenderer.ICON_AND_TEXT));
         comboBoxTier.setFont(new Font(new JList().getFont().getName(), Font.BOLD, 20));
         Season.Game.Rank lastRank = DataSourceService.getLastInsertedRank();
         if (lastRank != null) {
@@ -101,17 +99,14 @@ public class AddGameDialog extends JDialog {
             comboBoxTier.setSelectedIndex(-1);
         }
         comboBoxDivision = new JComboBox<>(new String[]{"I", "II", "III", "IV", "V"});
-        comboBoxDivision.setRenderer(new ComboBoxRenderer(ComboBoxRenderer.DIVISION));
+        comboBoxDivision.setRenderer(new ComboBoxRenderer(ComboBoxRenderer.TEXT_ONLY));
         comboBoxDivision.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
         if (lastRank != null) {
             comboBoxDivision.setSelectedItem(lastRank.getDivision());
         } else {
             comboBoxDivision.setSelectedIndex(-1);
         }
-        textFieldLp = new JTextField();
-        textFieldLp.setFont(textFieldFont);
-        textFieldLp.setHorizontalAlignment(JTextField.CENTER);
-        ((PlainDocument) textFieldLp.getDocument()).setDocumentFilter(new NumberFilter());
+        textFieldLp = new InputNumberField();
 
         JLabel labelLength = new JLabel("Length:");
         labelLength.setFont(labelFont);
@@ -119,7 +114,7 @@ public class AddGameDialog extends JDialog {
         spinnerLength = new JSpinner(new SpinnerDateModel());
         JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(spinnerLength, "mm:ss");
         spinnerLength.setEditor(timeEditor);
-        spinnerLength.setFont(textFieldFont);
+        spinnerLength.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
         spinnerLength.setValue(new Date(0));
 
         JSeparator separator1 = new JSeparator();
@@ -145,44 +140,20 @@ public class AddGameDialog extends JDialog {
 
         JLabel labelTurret = new JLabel("Turrets");
         labelTurret.setFont(labelFont);
-        textFieldTurretsUser = new JTextField();
-        textFieldTurretsUser.setFont(textFieldFont);
-        textFieldTurretsUser.setHorizontalAlignment(JTextField.CENTER);
-        ((PlainDocument) textFieldTurretsUser.getDocument()).setDocumentFilter(new NumberFilter());
-        textFieldTurretsEnemy = new JTextField();
-        textFieldTurretsEnemy.setFont(textFieldFont);
-        textFieldTurretsEnemy.setHorizontalAlignment(JTextField.CENTER);
-        ((PlainDocument) textFieldTurretsEnemy.getDocument()).setDocumentFilter(new NumberFilter());
+        textFieldTurretsUser = new InputNumberField();
+        textFieldTurretsEnemy = new InputNumberField();
         JLabel labelInhibs = new JLabel("Inhibitors");
         labelInhibs.setFont(labelFont);
-        textFieldInhUser = new JTextField();
-        textFieldInhUser.setFont(textFieldFont);
-        textFieldInhUser.setHorizontalAlignment(JTextField.CENTER);
-        ((PlainDocument) textFieldInhUser.getDocument()).setDocumentFilter(new NumberFilter());
-        textFieldInhEnemy = new JTextField();
-        textFieldInhEnemy.setFont(textFieldFont);
-        textFieldInhEnemy.setHorizontalAlignment(JTextField.CENTER);
-        ((PlainDocument) textFieldInhEnemy.getDocument()).setDocumentFilter(new NumberFilter());
+        textFieldInhUser = new InputNumberField();
+        textFieldInhEnemy = new InputNumberField();
         JLabel labelDrakes = new JLabel("Dragons");
         labelDrakes.setFont(labelFont);
-        textFieldDrakeUser = new JTextField();
-        textFieldDrakeUser.setFont(textFieldFont);
-        textFieldDrakeUser.setHorizontalAlignment(JTextField.CENTER);
-        ((PlainDocument) textFieldDrakeUser.getDocument()).setDocumentFilter(new NumberFilter());
-        textFieldDrakeEnemy = new JTextField();
-        textFieldDrakeEnemy.setFont(textFieldFont);
-        textFieldDrakeEnemy.setHorizontalAlignment(JTextField.CENTER);
-        ((PlainDocument) textFieldDrakeEnemy.getDocument()).setDocumentFilter(new NumberFilter());
+        textFieldDrakeUser = new InputNumberField();
+        textFieldDrakeEnemy = new InputNumberField();
         JLabel labelnashors = new JLabel("Nashors");
         labelnashors.setFont(labelFont);
-        textFieldNashUser = new JTextField();
-        textFieldNashUser.setFont(textFieldFont);
-        textFieldNashUser.setHorizontalAlignment(JTextField.CENTER);
-        ((PlainDocument) textFieldNashUser.getDocument()).setDocumentFilter(new NumberFilter());
-        textFieldNashEnemy = new JTextField();
-        textFieldNashEnemy.setFont(textFieldFont);
-        textFieldNashEnemy.setHorizontalAlignment(JTextField.CENTER);
-        ((PlainDocument) textFieldNashEnemy.getDocument()).setDocumentFilter(new NumberFilter());
+        textFieldNashUser = new InputNumberField();
+        textFieldNashEnemy = new InputNumberField();
 
         JSeparator separator2 = new JSeparator();
 
@@ -566,111 +537,92 @@ public class AddGameDialog extends JDialog {
             labelChamp.setFont(labelFont);
             String[] champs = new String[1];
             champs = DataSourceService.getChampList().toArray(champs);
-            cbChamp = new JComboBox<>(champs);
+            cbChamp = new JComboBox<String>(champs){
+                @Override
+                public void repaint() {
+                    try {
+                        if (this.getSelectedIndex() == -1){
+                            this.setBackground(Color.getHSBColor(0/360f,0.75f,1));
+                        } else {
+                            this.setBackground(new JComboBox<>().getBackground());
+                        }
+                    } catch (Exception e){}
+                    super.repaint();
+                }
+            };
+            cbChamp.setRenderer(new ComboBoxRenderer(ComboBoxRenderer.TEXT_ONLY));
             cbChamp.setSelectedIndex(-1);
 
             JLabel labelRole = new JLabel("Role:");
             labelRole.setFont(labelFont);
-            cbRole = new JComboBox<>(Role.stringValues());
+            cbRole = new JComboBox<String>(Role.stringValues()){
+                @Override
+                public void repaint() {
+                    try {
+                        if (this.getSelectedIndex() == -1 || this.getSelectedItem().equals(Role.UNDEFINED.toString())){
+                            this.setBackground(Color.getHSBColor(0/360f,0.75f,1));
+                        } else {
+                            this.setBackground(new JComboBox<>().getBackground());
+                        }
+                    } catch (Exception e){}
+                    super.repaint();
+                }
+            };
+            cbRole.setRenderer(new ComboBoxRenderer(ComboBoxRenderer.TEXT_ONLY));
             cbRole.setSelectedIndex(-1);
 
             JLabel labelFarm = new JLabel("Farm:");
             labelFarm.setFont(labelFont);
-            tfFarm = new JTextField();
-            tfFarm.setFont(textFieldFont);
-            tfFarm.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfFarm.getDocument()).setDocumentFilter(new NumberFilter());
+            tfFarm = new InputNumberField();
             JLabel labelGold = new JLabel("Gold:");
             labelGold.setFont(labelFont);
-            tfGold = new JTextField();
-            tfGold.setFont(textFieldFont);
-            tfGold.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfGold.getDocument()).setDocumentFilter(new NumberFilter());
+            tfGold = new InputNumberField();
             JLabel labelTurrets = new JLabel("Turrets:");
             labelTurrets.setFont(labelFont);
-            tfTurrets = new JTextField();
-            tfTurrets.setFont(textFieldFont);
-            tfTurrets.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfTurrets.getDocument()).setDocumentFilter(new NumberFilter());
+            tfTurrets = new InputNumberField();
             JLabel labelFb = new JLabel("FB:");
             labelFb.setFont(labelFont);
             rbFb = new JRadioButton();
 
             JLabel labelKills = new JLabel("K:");
             labelKills.setFont(labelFont);
-            tfK = new JTextField();
-            tfK.setFont(textFieldFont);
-            tfK.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfK.getDocument()).setDocumentFilter(new NumberFilter());
+            tfK = new InputNumberField();
             JLabel labelDeaths = new JLabel("D:");
             labelDeaths.setFont(labelFont);
-            tfD = new JTextField();
-            tfD.setFont(textFieldFont);
-            tfD.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfD.getDocument()).setDocumentFilter(new NumberFilter());
+            tfD = new InputNumberField();
             JLabel labelAssists = new JLabel("A:");
             labelAssists.setFont(labelFont);
-            tfA = new JTextField();
-            tfA.setFont(textFieldFont);
-            tfA.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfA.getDocument()).setDocumentFilter(new NumberFilter());
+            tfA = new InputNumberField();
             JLabel labelSpree = new JLabel("Spree:");
             labelSpree.setFont(labelFont);
-            tfS = new JTextField();
-            tfS.setFont(textFieldFont);
-            tfS.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfS.getDocument()).setDocumentFilter(new NumberFilter());
+            tfS = new InputNumberField();
 
             JLabel labelDouble = new JLabel("Double:");
             labelDouble.setFont(labelFont);
-            tfDouble = new JTextField();
-            tfDouble.setFont(textFieldFont);
-            tfDouble.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfDouble.getDocument()).setDocumentFilter(new NumberFilter());
+            tfDouble = new InputNumberField();
             JLabel labelTriple = new JLabel("Triple:");
             labelTriple.setFont(labelFont);
-            tfTriple = new JTextField();
-            tfTriple.setFont(textFieldFont);
-            tfTriple.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfTriple.getDocument()).setDocumentFilter(new NumberFilter());
+            tfTriple = new InputNumberField();
             JLabel labelQuadra = new JLabel("Quadra:");
             labelQuadra.setFont(labelFont);
-            tfQuadra = new JTextField();
-            tfQuadra.setFont(textFieldFont);
-            tfQuadra.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfQuadra.getDocument()).setDocumentFilter(new NumberFilter());
+            tfQuadra = new InputNumberField();
             JLabel labelPenta = new JLabel("Penta:");
             labelPenta.setFont(labelFont);
-            tfPenta = new JTextField();
-            tfPenta.setFont(textFieldFont);
-            tfPenta.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfPenta.getDocument()).setDocumentFilter(new NumberFilter());
+            tfPenta = new InputNumberField();
 
             JLabel labelDmgT = new JLabel("Dmg Total:");
             labelDmgT.setFont(labelFont);
-            tfDmgT = new JTextField();
-            tfDmgT.setFont(textFieldFont);
-            tfDmgT.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfDmgT.getDocument()).setDocumentFilter(new NumberFilter());
+            tfDmgT = new InputNumberField();
             JLabel labelDmgCh = new JLabel("Dmg to Champs:");
             labelDmgCh.setFont(labelFont);
-            tfDmgCh = new JTextField();
-            tfDmgCh.setFont(textFieldFont);
-            tfDmgCh.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfDmgCh.getDocument()).setDocumentFilter(new NumberFilter());
+            tfDmgCh = new InputNumberField();
 
             JLabel labelWardP = new JLabel("Wards Placed:");
             labelWardP.setFont(labelFont);
-            tfWardP = new JTextField();
-            tfWardP.setFont(textFieldFont);
-            tfWardP.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfWardP.getDocument()).setDocumentFilter(new NumberFilter());
+            tfWardP = new InputNumberField();
             JLabel labelWArdD = new JLabel("Wards Destroyed:");
             labelWArdD.setFont(labelFont);
-            tfWardD = new JTextField();
-            tfWardD.setFont(textFieldFont);
-            tfWardD.setHorizontalAlignment(JTextField.CENTER);
-            ((PlainDocument) tfWardD.getDocument()).setDocumentFilter(new NumberFilter());
+            tfWardD = new InputNumberField();
 
             GroupLayout layout = new GroupLayout(this);
             this.setLayout(layout);
@@ -716,58 +668,58 @@ public class AddGameDialog extends JDialog {
                     .addGap(5));
             layout.setHorizontalGroup(layout.createParallelGroup()
                     .addGroup(layout.createSequentialGroup()
-                            .addComponent(labelChamp, 75, 75, 75)
+                            .addComponent(labelChamp).addGap(5)
                             .addComponent(cbChamp, 100, 100, 100)
                             .addGap(5)
-                            .addComponent(labelKills, 20, 20, 20)
+                            .addComponent(labelKills).addGap(5)
                             .addComponent(tfK, 35, 35, 35)
                             .addGap(5)
-                            .addComponent(labelDeaths, 20, 20, 20)
+                            .addComponent(labelDeaths).addGap(5)
                             .addComponent(tfD, 35, 35, 35)
                             .addGap(5)
-                            .addComponent(labelAssists, 20, 20, 20)
+                            .addComponent(labelAssists).addGap(5)
                             .addComponent(tfA, 35, 35, 35)
                             .addGap(5)
-                            .addComponent(labelSpree, 45, 45, 45)
+                            .addComponent(labelSpree).addGap(5)
                             .addComponent(tfS, 35, 35, 35)
                             .addGap(5)
-                            .addComponent(labelDouble, 55, 55, 55)
+                            .addComponent(labelDouble).addGap(5)
                             .addComponent(tfDouble, 25, 25, 25)
                             .addGap(5)
-                            .addComponent(labelTriple, 45, 45, 45)
+                            .addComponent(labelTriple).addGap(5)
                             .addComponent(tfTriple, 25, 25, 25)
                             .addGap(5)
-                            .addComponent(labelQuadra, 52, 52, 52)
+                            .addComponent(labelQuadra).addGap(5)
                             .addComponent(tfQuadra, 25, 25, 25)
                             .addGap(5)
-                            .addComponent(labelPenta, 45, 45, 45)
+                            .addComponent(labelPenta).addGap(5)
                             .addComponent(tfPenta, 25, 25, 25)
                             .addGap(5)
-                            .addComponent(labelWArdD, 118, 118, 118)
+                            .addComponent(labelWArdD).addGap(5)
                             .addComponent(tfWardD, 25, 25, 25))
                     .addGroup(layout.createSequentialGroup()
-                            .addComponent(labelRole, 75, 75, 75)
+                            .addComponent(labelRole).addGap(5)
                             .addComponent(cbRole, 100, 100, 100)
                             .addGap(5)
-                            .addComponent(labelFb, 25, 25, 25)
+                            .addComponent(labelFb).addGap(5)
                             .addComponent(rbFb, 20, 20, 20)
                             .addGap(5)
-                            .addComponent(labelFarm, 40, 40, 40)
+                            .addComponent(labelFarm).addGap(5)
                             .addComponent(tfFarm, 50, 50, 50)
                             .addGap(5)
-                            .addComponent(labelGold, 40, 40, 40)
+                            .addComponent(labelGold).addGap(5)
                             .addComponent(tfGold, 65, 65, 65)
                             .addGap(5)
-                            .addComponent(labelTurrets, 53, 53, 53)
+                            .addComponent(labelTurrets).addGap(5)
                             .addComponent(tfTurrets, 25, 25, 25)
                             .addGap(5)
-                            .addComponent(labelDmgT, 78, 78, 78)
+                            .addComponent(labelDmgT).addGap(5)
                             .addComponent(tfDmgT, 70, 70, 70)
                             .addGap(5)
-                            .addComponent(labelDmgCh, 108, 108, 108)
+                            .addComponent(labelDmgCh).addGap(5)
                             .addComponent(tfDmgCh, 60, 60, 60)
                             .addGap(5)
-                            .addComponent(labelWardP, 97, 97, 97)
+                            .addComponent(labelWardP).addGap(5)
                             .addComponent(tfWardP, 30, 30, 30)));
         }
 

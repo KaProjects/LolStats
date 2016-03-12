@@ -6,6 +6,7 @@ import org.kaleta.lolstats.backend.service.LolApiService;
 
 import javax.swing.*;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
@@ -19,8 +20,10 @@ public class GameTrackingPanel extends JPanel{
     private boolean working;
     private JPanel panelFoundGames;
     private List<String> gameIds;
+    private Component parent;
 
-    public GameTrackingPanel(){
+    public GameTrackingPanel(Component parent){
+        this.parent = parent;
         gameIds = new ArrayList<>();
         this.setBackground(Color.BLUE);
         this.setVisible(false);
@@ -63,7 +66,7 @@ public class GameTrackingPanel extends JPanel{
                     if (!gameIds.contains(info.getId())){
                         Season.Game game = service.getGameById(info.getId(),true);
                         gameIds.add(info.getId());
-                        panelFoundGames.add(new RecentGamePanel(game));
+                        panelFoundGames.add(new RecentGamePanel(game, parent));
                         panelFoundGames.repaint();
                         panelFoundGames.revalidate();
                         Toolkit.getDefaultToolkit().beep();
