@@ -2,6 +2,7 @@ package org.kaleta.lolstats.frontend.component;
 
 import org.kaleta.lolstats.backend.entity.GameInfo;
 import org.kaleta.lolstats.backend.entity.Season;
+import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.backend.service.LolApiService;
 import org.kaleta.lolstats.frontend.dialog.AddGameDialog;
 
@@ -21,7 +22,6 @@ import java.util.List;
  */
 public class GameTrackingPanel extends JPanel{
     private boolean working;
-    private long startTime;
     private JPanel panelFoundGames;
     private List<String> gameIds;
 
@@ -40,26 +40,27 @@ public class GameTrackingPanel extends JPanel{
         buttonCancel.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                GameTrackingPanel.this.setVisible(false);
                 working = false;
+                GameTrackingPanel.this.setVisible(false);
             }
         });
         this.add(buttonCancel);
     }
 
     public void startTracking() {
+        working = true;
         panelFoundGames.removeAll();
         gameIds.clear();
 
-        startTime = System.currentTimeMillis() - 600000;
-        panelFoundGames.add(new GamePanel(new SimpleDateFormat("HH:mm - dd.MM.yyyy").format(startTime)));
+        long startTime = System.currentTimeMillis() - 600000;
+        panelFoundGames.add(new RecentGamePanel(new SimpleDateFormat("HH:mm - dd.MM.yyyy").format(startTime)));
         panelFoundGames.repaint();
         panelFoundGames.revalidate();
         this.setVisible(true);
 
         LolApiService service = new LolApiService();
-        working = true;
         while (working) {
+            System.out.println("working");
             List<GameInfo> infoList = service.getRecentRankedGamesInfo();
             for (int i = infoList.size() - 1; i >= 0; i--) {
                 GameInfo info = infoList.get(i);
@@ -67,7 +68,7 @@ public class GameTrackingPanel extends JPanel{
                     if (!gameIds.contains(info.getId())){
                         Season.Game game = service.getGameById(info.getId(),true);
                         gameIds.add(info.getId());
-                        panelFoundGames.add(new GamePanel(game));
+                        panelFoundGames.add(new RecentGamePanel(game));
                         panelFoundGames.repaint();
                         panelFoundGames.revalidate();
                         Toolkit.getDefaultToolkit().beep();
@@ -75,54 +76,19 @@ public class GameTrackingPanel extends JPanel{
                 }
             }
             try {
-                Thread.sleep(15000);
+                if (working){
+                    Thread.sleep(5000);
+                }
+                if (working){
+                    Thread.sleep(5000);
+                }
+                if (working){
+                    Thread.sleep(5000);
+                }
             } catch (InterruptedException e) {
                 working = false;
             }
         }
 
-    }
-
-    private class GamePanel extends JPanel {
-        private Font font = new Font(new JLabel().getFont().getName(),Font.BOLD,15);
-        private boolean added = false;
-
-        public GamePanel(final Season.Game game){
-            JLabel labelInfo = new JLabel(game.getUser().getChamp());
-            labelInfo.setFont(font);
-
-            this.add(labelInfo);
-            this.setBorder(BorderFactory.createLineBorder(Color.GREEN));
-            this.setBackground(Color.getHSBColor(120/360f,0.5f,0.75f));
-            this.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (!added){
-                        AddGameDialog dialog = new AddGameDialog();
-                        dialog.setUpDialog(game);
-                        dialog.setVisible(true);
-                        if (dialog.getResult()){
-                            //todo dialog.getGame(); + update data
-
-                            GamePanel.this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-                            GamePanel.this.setBackground(Color.LIGHT_GRAY);
-                            GamePanel.this.repaint();
-                            GamePanel.this.revalidate();
-                            added = true;
-                        }
-                    }
-
-                }
-            });
-        }
-
-        public GamePanel(String time){
-            JLabel labelInfo = new JLabel("Started: " + time);
-            labelInfo.setFont(font);
-
-            this.add(labelInfo);
-            this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            this.setBackground(Color.getHSBColor(240/360f,0.5f,0.75f));
-        }
     }
 }

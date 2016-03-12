@@ -2,12 +2,12 @@ package org.kaleta.lolstats.backend.service;
 
 import org.kaleta.lolstats.backend.entity.Config;
 import org.kaleta.lolstats.backend.entity.Season;
-import org.kaleta.lolstats.backend.manager.ConfigManager;
-import org.kaleta.lolstats.backend.manager.JaxbConfigManager;
-import org.kaleta.lolstats.backend.manager.JaxbSeasonManager;
-import org.kaleta.lolstats.backend.manager.ManagerException;
+import org.kaleta.lolstats.backend.manager.*;
 import org.kaleta.lolstats.frontend.ErrorDialog;
 import org.kaleta.lolstats.frontend.Initializer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Stanislav Kaleta on 11.02.2016.
@@ -19,7 +19,7 @@ public class DataSourceService {
     /**
      * TODo doc.
      */
-    public Config.LolApi getLolApiConfig(){
+    public static Config.LolApi getLolApiConfig(){
         try {
             ConfigManager manager = new JaxbConfigManager();
             return manager.retrieveConfig().getLolApi();
@@ -32,26 +32,46 @@ public class DataSourceService {
     /**
      * TODo doc.
      */
-    public void createSeason(String name){
+    public static void updateChampionList(){
+        // TODO: 3/11/16 load from api service and apply to config
+    }
+
+    /**
+     * TODo doc.
+     */
+    public static List<String> getChampList(){
+        try {
+            ConfigManager manager = new JaxbConfigManager();
+            List<String> champs = new ArrayList<>();
+            for(Config.Champs.Champ champ : manager.retrieveConfig().getChamps().getChamp()){
+                champs.add(champ.getName());
+            }
+            return champs;
+        } catch (ManagerException e){
+            Initializer.LOG.severe(ErrorDialog.getExceptionStackTrace(e));
+            throw new ServiceFailureException(e);
+        }
+    }
+
+    /**
+     * TODo doc.
+     */
+    public static void createSeason(String name, final Long number){
         try {
             ConfigManager configManager = new JaxbConfigManager();
             Config config = configManager.retrieveConfig();
-            int lastId = 0;
-            for (Config.Seasons.Season s : config.getSeasons().getSeason()){
-                int id = Integer.parseInt(s.getId());
-                if (id > lastId){
-                    lastId = id;
-                }
+            if (config.getSeasons().getSeason().stream().anyMatch(s -> Long.parseLong(s.getId()) == number)){
+                throw new IllegalArgumentException("Id already exist!");
             }
 
             Season season = new Season();
             season.setName(name);
-            season.setId(String.valueOf(lastId + 1));
+            season.setId(String.valueOf(number));
             new JaxbSeasonManager().createSeason(season);
 
             Config.Seasons.Season s = new Config.Seasons.Season();
-            s.setId(String.valueOf(lastId + 1));
-            s.setOrder(String.valueOf(lastId + 1));
+            s.setId(String.valueOf(number));
+            s.setOrder(String.valueOf(number));
             config.getSeasons().getSeason().add(s);
             configManager.updateConfig(config);
         } catch (ManagerException e){
@@ -63,27 +83,49 @@ public class DataSourceService {
     /**
      * TODo doc.
      */
-    public static void addNewGame(int seasonNumber, Season.Game game){
-        // TODO: 3/5/16 impl.
+    public static void addNewGame(Season.Game game){
+        try {
+            String actualSeason = new JaxbConfigManager().retrieveConfig().getSeasons().getActualSeason();
+            SeasonManager manager = new JaxbSeasonManager();
+            Season season = manager.retrieveSeason(Long.parseLong(actualSeason));
+            season.getGame().add(game);
+            manager.updateSeason(season);
+        } catch (ManagerException e){
+            Initializer.LOG.severe(ErrorDialog.getExceptionStackTrace(e));
+            throw new ServiceFailureException(e);
+        }
     }
 
     /**
      * TODo doc.
      */
     public static Season.Game.Rank getLastInsertedRank(){
-        // TODO: 3/5/16 impl.
-        Season.Game.Rank rank = new Season.Game.Rank();
-        rank.setTier("PLATINUM");
-        rank.setDivision("III");
-        rank.setLp("90");
-        return null;
+        try {
+            String actualSeasonId = new JaxbConfigManager().retrieveConfig().getSeasons().getActualSeason();
+            Season actualSeason = new JaxbSeasonManager().retrieveSeason(Long.parseLong(actualSeasonId));
+            if (actualSeason.getGame().size() > 0){
+                Season.Game.Rank lastRank = actualSeason.getGame().get(actualSeason.getGame().size() - 1).getRank();
+                if (!lastRank.getTier().equals("") && !lastRank.getDivision().equals("") && !lastRank.getLp().equals("")){
+                    return lastRank;
+                }
+            }
+            return null;
+        } catch (ManagerException e){
+            Initializer.LOG.severe(ErrorDialog.getExceptionStackTrace(e));
+            throw new ServiceFailureException(e);
+        }
     }
 
     /**
      * TODo doc.
      */
     public static Integer getLastInsertedGameNumber(){
-        // TODO: 3/5/16 impl.
-        return 0;
+        try {
+            String actualSeasonId = new JaxbConfigManager().retrieveConfig().getSeasons().getActualSeason();
+            return new JaxbSeasonManager().retrieveSeason(Long.parseLong(actualSeasonId)).getGame().size();
+        } catch (ManagerException e){
+            Initializer.LOG.severe(ErrorDialog.getExceptionStackTrace(e));
+            throw new ServiceFailureException(e);
+        }
     }
 }

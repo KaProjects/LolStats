@@ -36,7 +36,7 @@ public class LolApiService {
 
     public LolApiService() {
         //todo ectract this to api manager
-        Config.LolApi apiConfig = new DataSourceService().getLolApiConfig();
+        Config.LolApi apiConfig = DataSourceService.getLolApiConfig();
         String region = apiConfig.getRegion();
         String apiKey = apiConfig.getAccessKey();
         String playerNick = apiConfig.getNick();
@@ -319,5 +319,21 @@ public class LolApiService {
             }
         }
         return outputGames;
+    }
+
+    /**
+     * TODO doc.
+     */
+    public List<String> getChampionList(){
+        if (champsMap == null){
+            champsMap = new HashMap<>();
+            Object[] champList = (Object[]) loadData(champListUrl).get("champions");
+            for (Object champ : champList){
+                String id = String.valueOf(((HashMap) champ).get("id"));
+                HashMap champInfo = loadData(champByIdUrl.replace("{ID}",id));
+                champsMap.put(id, String.valueOf(champInfo.get("name")));
+            }
+        }
+        return new ArrayList<>(champsMap.values());
     }
 }

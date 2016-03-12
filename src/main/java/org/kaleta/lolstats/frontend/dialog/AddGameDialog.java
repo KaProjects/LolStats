@@ -3,6 +3,8 @@ package org.kaleta.lolstats.frontend.dialog;
 import org.jdatepicker.ComponentColorDefaults;
 import org.jdatepicker.ComponentFormatDefaults;
 import org.jdatepicker.JDatePicker;
+import org.kaleta.lolstats.backend.entity.Player;
+import org.kaleta.lolstats.backend.entity.Role;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.common.NumberFilter;
@@ -12,8 +14,10 @@ import javax.swing.*;
 import javax.swing.text.PlainDocument;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -31,6 +35,24 @@ public class AddGameDialog extends JDialog {
     private JRadioButton enemyTeamVictory;
     private JRadioButton userTeamFb;
     private JRadioButton enemyTeamFb;
+    private JTextField textFieldTurretsUser;
+    private JTextField textFieldTurretsEnemy;
+    private JTextField textFieldInhUser;
+    private JTextField textFieldInhEnemy;
+    private JTextField textFieldDrakeUser;
+    private JTextField textFieldDrakeEnemy;
+    private JTextField textFieldNashUser;
+    private JTextField textFieldNashEnemy;
+    private PlayerStatsPanel userStats;
+    private PlayerStatsPanel userTeammate1;
+    private PlayerStatsPanel userTeammate2;
+    private PlayerStatsPanel userTeammate3;
+    private PlayerStatsPanel userTeammate4;
+    private PlayerStatsPanel userEnemy1;
+    private PlayerStatsPanel userEnemy2;
+    private PlayerStatsPanel userEnemy3;
+    private PlayerStatsPanel userEnemy4;
+    private PlayerStatsPanel userEnemy5;
 
     private boolean result;
 
@@ -108,27 +130,95 @@ public class AddGameDialog extends JDialog {
         labelEnemyTeam.setFont(labelFont);
         JLabel labelVictory = new JLabel("Victory");
         labelVictory.setFont(labelFont);
-        JLabel labelFb = new JLabel("First Blood");
+        JLabel labelFb = new JLabel("FB");
         labelFb.setFont(labelFont);
-
         userTeamVictory = new JRadioButton();
         enemyTeamVictory = new JRadioButton();
         ButtonGroup victoryGroup = new ButtonGroup();
         victoryGroup.add(userTeamVictory);
         victoryGroup.add(enemyTeamVictory);
-
         userTeamFb = new JRadioButton();
         enemyTeamFb = new JRadioButton();
         ButtonGroup fbGroup = new ButtonGroup();
         fbGroup.add(userTeamFb);
         fbGroup.add(enemyTeamFb);
 
-        // todo continue team stats
-        // TODO: 3/10/16
+        JLabel labelTurret = new JLabel("Turrets");
+        labelTurret.setFont(labelFont);
+        textFieldTurretsUser = new JTextField();
+        textFieldTurretsUser.setFont(textFieldFont);
+        textFieldTurretsUser.setHorizontalAlignment(JTextField.CENTER);
+        ((PlainDocument) textFieldTurretsUser.getDocument()).setDocumentFilter(new NumberFilter());
+        textFieldTurretsEnemy = new JTextField();
+        textFieldTurretsEnemy.setFont(textFieldFont);
+        textFieldTurretsEnemy.setHorizontalAlignment(JTextField.CENTER);
+        ((PlainDocument) textFieldTurretsEnemy.getDocument()).setDocumentFilter(new NumberFilter());
+        JLabel labelInhibs = new JLabel("Inhibitors");
+        labelInhibs.setFont(labelFont);
+        textFieldInhUser = new JTextField();
+        textFieldInhUser.setFont(textFieldFont);
+        textFieldInhUser.setHorizontalAlignment(JTextField.CENTER);
+        ((PlainDocument) textFieldInhUser.getDocument()).setDocumentFilter(new NumberFilter());
+        textFieldInhEnemy = new JTextField();
+        textFieldInhEnemy.setFont(textFieldFont);
+        textFieldInhEnemy.setHorizontalAlignment(JTextField.CENTER);
+        ((PlainDocument) textFieldInhEnemy.getDocument()).setDocumentFilter(new NumberFilter());
+        JLabel labelDrakes = new JLabel("Dragons");
+        labelDrakes.setFont(labelFont);
+        textFieldDrakeUser = new JTextField();
+        textFieldDrakeUser.setFont(textFieldFont);
+        textFieldDrakeUser.setHorizontalAlignment(JTextField.CENTER);
+        ((PlainDocument) textFieldDrakeUser.getDocument()).setDocumentFilter(new NumberFilter());
+        textFieldDrakeEnemy = new JTextField();
+        textFieldDrakeEnemy.setFont(textFieldFont);
+        textFieldDrakeEnemy.setHorizontalAlignment(JTextField.CENTER);
+        ((PlainDocument) textFieldDrakeEnemy.getDocument()).setDocumentFilter(new NumberFilter());
+        JLabel labelnashors = new JLabel("Nashors");
+        labelnashors.setFont(labelFont);
+        textFieldNashUser = new JTextField();
+        textFieldNashUser.setFont(textFieldFont);
+        textFieldNashUser.setHorizontalAlignment(JTextField.CENTER);
+        ((PlainDocument) textFieldNashUser.getDocument()).setDocumentFilter(new NumberFilter());
+        textFieldNashEnemy = new JTextField();
+        textFieldNashEnemy.setFont(textFieldFont);
+        textFieldNashEnemy.setHorizontalAlignment(JTextField.CENTER);
+        ((PlainDocument) textFieldNashEnemy.getDocument()).setDocumentFilter(new NumberFilter());
 
         JSeparator separator2 = new JSeparator();
 
-        // TODO: 3/10/16
+        ButtonGroup groupPlayerFb = new ButtonGroup();
+        userStats = new PlayerStatsPanel(groupPlayerFb);
+        userTeammate1 = new PlayerStatsPanel(groupPlayerFb);
+        userTeammate2 = new PlayerStatsPanel(groupPlayerFb);
+        userTeammate3 = new PlayerStatsPanel(groupPlayerFb);
+        userTeammate4 = new PlayerStatsPanel(groupPlayerFb);
+        userEnemy1 = new PlayerStatsPanel(groupPlayerFb);
+        userEnemy2 = new PlayerStatsPanel(groupPlayerFb);
+        userEnemy3 = new PlayerStatsPanel(groupPlayerFb);
+        userEnemy4 = new PlayerStatsPanel(groupPlayerFb);
+        userEnemy5 = new PlayerStatsPanel(groupPlayerFb);
+
+        JPanel panelUser = new JPanel();
+        panelUser.setLayout(new GridLayout(1, 1));
+        panelUser.add(userStats);
+        panelUser.setBorder(BorderFactory.createTitledBorder(DataSourceService.getLolApiConfig().getNick()));
+
+        JPanel panelMates = new JPanel();
+        panelMates.setLayout(new GridLayout(4, 1));
+        panelMates.add(userTeammate1);
+        panelMates.add(userTeammate2);
+        panelMates.add(userTeammate3);
+        panelMates.add(userTeammate4);
+        panelMates.setBorder(BorderFactory.createTitledBorder("Teammates"));
+
+        JPanel panelEnemies = new JPanel();
+        panelEnemies.setLayout(new GridLayout(5, 1));
+        panelEnemies.add(userEnemy1);
+        panelEnemies.add(userEnemy2);
+        panelEnemies.add(userEnemy3);
+        panelEnemies.add(userEnemy4);
+        panelEnemies.add(userEnemy5);
+        panelEnemies.setBorder(BorderFactory.createTitledBorder("Enemies"));
 
         JSeparator separator3 = new JSeparator();
 
@@ -139,7 +229,7 @@ public class AddGameDialog extends JDialog {
         this.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createSequentialGroup()
                 .addGap(10)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup()
                                         .addGroup(layout.createSequentialGroup()
@@ -170,20 +260,46 @@ public class AddGameDialog extends JDialog {
                                                 .addComponent(textFieldLp, 50, 50, 50))))
                         .addComponent(separator1)
                         .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup()
-                                .addComponent(labelYourTeam, 100, 100, 100)
-                                .addComponent(labelEnemyTeam, 100, 100, 100))
-                            .addGroup(layout.createParallelGroup()
-                                .addComponent(labelVictory)
-                                .addComponent(userTeamVictory)
-                                .addComponent(enemyTeamVictory))
-                            .addGroup(layout.createParallelGroup()
-                                .addComponent(labelFb)
-                                .addComponent(userTeamFb)
-                                .addComponent(enemyTeamFb)))
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(labelYourTeam, 90, 90, 90)
+                                        .addComponent(labelEnemyTeam, 90, 90, 90))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                        .addComponent(labelVictory)
+                                        .addComponent(userTeamVictory, 20, 20, 20)
+                                        .addComponent(enemyTeamVictory, 20, 20, 20))
+                                .addGap(5)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                        .addComponent(labelFb)
+                                        .addComponent(userTeamFb, 20, 20, 20)
+                                        .addComponent(enemyTeamFb, 20, 20, 20))
+                                .addGap(5)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                        .addComponent(labelTurret)
+                                        .addComponent(textFieldTurretsUser, 40, 40, 40)
+                                        .addComponent(textFieldTurretsEnemy, 40, 40, 40))
+                                .addGap(5)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                        .addComponent(labelInhibs)
+                                        .addComponent(textFieldInhUser, 40, 40, 40)
+                                        .addComponent(textFieldInhEnemy, 40, 40, 40))
+                                .addGap(5)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                        .addComponent(labelDrakes)
+                                        .addComponent(textFieldDrakeUser, 40, 40, 40)
+                                        .addComponent(textFieldDrakeEnemy, 40, 40, 40))
+                                .addGap(5)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                        .addComponent(labelnashors)
+                                        .addComponent(textFieldNashUser, 40, 40, 40)
+                                        .addComponent(textFieldNashEnemy, 40, 40, 40)))
                         .addComponent(separator2)
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(panelUser)
+                                .addComponent(panelMates)
+                                .addComponent(panelEnemies))
                         .addComponent(separator3)
                         .addGroup(layout.createSequentialGroup()
+                                .addGap(100)
                                 .addComponent(buttonCancel, 100, 100, 100)
                                 .addGap(5)
                                 .addComponent(buttonOk, 100, 100, 100)))
@@ -214,23 +330,44 @@ public class AddGameDialog extends JDialog {
                                         .addComponent(labelLp)
                                         .addComponent(textFieldLp, 25, 25, 25))))
                 .addGap(5)
-                .addComponent(separator1)
+                .addComponent(separator1, 5, 5, 5)
                 .addGap(5)
                 .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(20)
-                                .addComponent(labelYourTeam)
-                                .addComponent(labelEnemyTeam))
+                                .addComponent(labelYourTeam, 25, 25, 25)
+                                .addComponent(labelEnemyTeam, 25, 25, 25))
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelVictory)
-                                .addComponent(userTeamVictory)
-                                .addComponent(enemyTeamVictory))
+                                .addComponent(labelVictory, 20, 20, 20)
+                                .addComponent(userTeamVictory, 25, 25, 25)
+                                .addComponent(enemyTeamVictory, 25, 25, 25))
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelFb)
-                                .addComponent(userTeamFb)
-                                .addComponent(enemyTeamFb)))
+                                .addComponent(labelFb, 20, 20, 20)
+                                .addComponent(userTeamFb, 25, 25, 25)
+                                .addComponent(enemyTeamFb, 25, 25, 25))
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelTurret, 20, 20, 20)
+                                .addComponent(textFieldTurretsUser, 25, 25, 25)
+                                .addComponent(textFieldTurretsEnemy, 25, 25, 25))
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelInhibs, 20, 20, 20)
+                                .addComponent(textFieldInhUser, 25, 25, 25)
+                                .addComponent(textFieldInhEnemy, 25, 25, 25))
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelDrakes, 20, 20, 20)
+                                .addComponent(textFieldDrakeUser, 25, 25, 25)
+                                .addComponent(textFieldDrakeEnemy, 25, 25, 25))
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelnashors, 20, 20, 20)
+                                .addComponent(textFieldNashUser, 25, 25, 25)
+                                .addComponent(textFieldNashEnemy, 25, 25, 25)))
                 .addGap(5)
-                .addComponent(separator2)
+                .addComponent(separator2, 5, 5, 5)
+                .addGap(5)
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(panelUser)
+                        .addComponent(panelMates)
+                        .addComponent(panelEnemies))
                 .addGap(5)
                 .addComponent(separator3)
                 .addGap(5)
@@ -243,10 +380,27 @@ public class AddGameDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String msg = null;
-                if (!userTeamFb.isSelected() && !enemyTeamFb.isSelected()){
+                if (!userEnemy1.isFilled() || !userEnemy2.isFilled() || !userEnemy3.isFilled()
+                        || !userEnemy4.isFilled() || !userEnemy5.isFilled()) {
+                    msg = "user opponents are not properly set!";
+                }
+                if (!userTeammate1.isFilled() || !userTeammate2.isFilled() || !userTeammate3.isFilled()
+                        || !userTeammate4.isFilled()) {
+                    msg = "user teammates are not properly set!";
+                }
+                if (!userStats.isFilled()) {
+                    msg = "user stats are not properly set!";
+                }
+                if (textFieldTurretsUser.getText().equals("") || textFieldTurretsEnemy.getText().equals("")
+                        || textFieldInhUser.getText().equals("") || textFieldInhEnemy.getText().equals("")
+                        || textFieldDrakeUser.getText().equals("") || textFieldDrakeEnemy.getText().equals("")
+                        || textFieldNashUser.getText().equals("") || textFieldNashEnemy.getText().equals("")) {
+                    msg = "Team numbers not set!";
+                }
+                if (!userTeamFb.isSelected() && !enemyTeamFb.isSelected()) {
                     msg = "Team first blood not set!";
                 }
-                if (!userTeamVictory.isSelected() && !enemyTeamVictory.isSelected()){
+                if (!userTeamVictory.isSelected() && !enemyTeamVictory.isSelected()) {
                     msg = "Winning team not set!";
                 }
                 if (comboBoxTier.getSelectedItem() != null && textFieldLp.getText().equals("")) {
@@ -277,38 +431,53 @@ public class AddGameDialog extends JDialog {
         });
     }
 
-    public void setUpDialog(Season.Game game){
-        if (!game.getNumber().equals("")){
+    public void setUpDialog(Season.Game game) {
+        if (!game.getNumber().equals("")) {
             textFieldGameNumber.setText(game.getNumber());
         }
-        if (game.getDate().equals("")){
-            datePicker.getModel().setDate(0,0,0);
+        if (game.getDate().equals("")) {
+            datePicker.getModel().setDate(0, 0, 0);
         } else {
             org.kaleta.lolstats.ex.entities.Date date = new org.kaleta.lolstats.ex.entities.Date();
             date.setStringDate(game.getDate());
-            datePicker.getModel().setDate(date.getYear(),date.getMonth() - 1,date.getDay());
+            datePicker.getModel().setDate(date.getYear(), date.getMonth() - 1, date.getDay());
         }
-        if (!game.getLength().equals("")){
-            spinnerLength.getModel().setValue(new Date(Integer.parseInt(game.getLength().substring(0,2)) * 60000
-                    + Integer.parseInt(game.getLength().substring(2,4)) * 1000));
+        if (!game.getLength().equals("")) {
+            spinnerLength.getModel().setValue(new Date(Integer.parseInt(game.getLength().substring(0, 2)) * 60000
+                    + Integer.parseInt(game.getLength().substring(2, 4)) * 1000));
         }
-        if (!game.getRank().getTier().equals("undefined") && !game.getRank().getTier().equals("")){
+        if (!game.getRank().getTier().equals("undefined") && !game.getRank().getTier().equals("")) {
             comboBoxTier.setSelectedItem(game.getRank().getTier().substring(0, 1) + game.getRank().getTier().substring(1).toLowerCase());
             comboBoxDivision.setSelectedItem(game.getRank().getDivision());
             textFieldLp.setText(game.getRank().getLp());
         }
-        if (!game.getUserTeam().getWin().equals("") && !game.getEnemyTeam().getWin().equals("")){
+        if (!game.getUserTeam().getWin().equals("") && !game.getEnemyTeam().getWin().equals("")) {
             userTeamVictory.setSelected(Boolean.parseBoolean(game.getUserTeam().getWin()));
             enemyTeamVictory.setSelected(Boolean.parseBoolean(game.getEnemyTeam().getWin()));
         }
-        if (!game.getUserTeam().getFirstBlood().equals("") && !game.getEnemyTeam().getFirstBlood().equals("")){
+        if (!game.getUserTeam().getFirstBlood().equals("") && !game.getEnemyTeam().getFirstBlood().equals("")) {
             userTeamFb.setSelected(Boolean.parseBoolean(game.getUserTeam().getFirstBlood()));
             enemyTeamFb.setSelected(Boolean.parseBoolean(game.getEnemyTeam().getFirstBlood()));
         }
+        textFieldTurretsUser.setText(game.getUserTeam().getTurrets());
+        textFieldInhUser.setText(game.getUserTeam().getInhibitors());
+        textFieldDrakeUser.setText(game.getUserTeam().getDragon());
+        textFieldNashUser.setText(game.getUserTeam().getBaron());
+        textFieldTurretsEnemy.setText(game.getEnemyTeam().getTurrets());
+        textFieldInhEnemy.setText(game.getEnemyTeam().getInhibitors());
+        textFieldDrakeEnemy.setText(game.getEnemyTeam().getDragon());
+        textFieldNashEnemy.setText(game.getEnemyTeam().getBaron());
 
-
-
-        // TODO: 3/4/16  
+        userStats.setPlayer(game.getUser());
+        userTeammate1.setPlayer(game.getUserMate().get(0));
+        userTeammate2.setPlayer(game.getUserMate().get(1));
+        userTeammate3.setPlayer(game.getUserMate().get(2));
+        userTeammate4.setPlayer(game.getUserMate().get(3));
+        userEnemy1.setPlayer(game.getOpponent().get(0));
+        userEnemy2.setPlayer(game.getOpponent().get(1));
+        userEnemy3.setPlayer(game.getOpponent().get(2));
+        userEnemy4.setPlayer(game.getOpponent().get(3));
+        userEnemy5.setPlayer(game.getOpponent().get(4));
     }
 
     public boolean getResult(){
@@ -333,11 +502,330 @@ public class AddGameDialog extends JDialog {
 
         newGame.getUserTeam().setWin(String.valueOf(userTeamVictory.isSelected()));
         newGame.getUserTeam().setFirstBlood(String.valueOf(userTeamFb.isSelected()));
+        newGame.getUserTeam().setTurrets(textFieldTurretsUser.getText());
+        newGame.getUserTeam().setInhibitors(textFieldInhUser.getText());
+        newGame.getUserTeam().setDragon(textFieldDrakeUser.getText());
+        newGame.getUserTeam().setBaron(textFieldNashUser.getText());
+
         newGame.getEnemyTeam().setWin(String.valueOf(enemyTeamVictory.isSelected()));
         newGame.getEnemyTeam().setFirstBlood(String.valueOf(enemyTeamFb.isSelected()));
+        newGame.getEnemyTeam().setTurrets(textFieldTurretsEnemy.getText());
+        newGame.getEnemyTeam().setInhibitors(textFieldInhEnemy.getText());
+        newGame.getEnemyTeam().setDragon(textFieldDrakeEnemy.getText());
+        newGame.getEnemyTeam().setBaron(textFieldNashEnemy.getText());
 
+        newGame.setUser(userStats.getPlayer());
+        newGame.getUserMate().add(userTeammate1.getPlayer());
+        newGame.getUserMate().add(userTeammate2.getPlayer());
+        newGame.getUserMate().add(userTeammate3.getPlayer());
+        newGame.getUserMate().add(userTeammate4.getPlayer());
+        newGame.getOpponent().add(userEnemy1.getPlayer());
+        newGame.getOpponent().add(userEnemy2.getPlayer());
+        newGame.getOpponent().add(userEnemy3.getPlayer());
+        newGame.getOpponent().add(userEnemy4.getPlayer());
+        newGame.getOpponent().add(userEnemy5.getPlayer());
 
-        // TODO: 3/4/16
         return newGame;
+    }
+
+    public class PlayerStatsPanel extends JPanel{
+        private JComboBox<String> cbChamp;
+        private JComboBox<String> cbRole;
+        private JTextField tfFarm;
+        private JTextField tfGold;
+        private JTextField tfTurrets;
+        private JRadioButton rbFb;
+        private JTextField tfK;
+        private JTextField tfD;
+        private JTextField tfA;
+        private JTextField tfS;
+        private JTextField tfDouble;
+        private JTextField tfTriple;
+        private JTextField tfQuadra;
+        private JTextField tfPenta;
+        private JTextField tfDmgT;
+        private JTextField tfDmgCh;
+        private JTextField tfWardP;
+        private JTextField tfWardD;
+
+        public PlayerStatsPanel(ButtonGroup fbGroup){
+            this.initComponents();
+            fbGroup.add(rbFb);
+        }
+
+        private void initComponents() {
+            Font labelFont = new Font(Font.DIALOG, Font.BOLD, 15);
+            Font textFieldFont = new Font(Font.DIALOG, Font.BOLD, 20);
+
+            JLabel labelChamp = new JLabel("Champion:");
+            labelChamp.setFont(labelFont);
+            String[] champs = new String[1];
+            champs = DataSourceService.getChampList().toArray(champs);
+            cbChamp = new JComboBox<>(champs);
+            cbChamp.setSelectedIndex(-1);
+
+            JLabel labelRole = new JLabel("Role:");
+            labelRole.setFont(labelFont);
+            cbRole = new JComboBox<>(Role.stringValues());
+            cbRole.setSelectedIndex(-1);
+
+            JLabel labelFarm = new JLabel("Farm:");
+            labelFarm.setFont(labelFont);
+            tfFarm = new JTextField();
+            tfFarm.setFont(textFieldFont);
+            tfFarm.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfFarm.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelGold = new JLabel("Gold:");
+            labelGold.setFont(labelFont);
+            tfGold = new JTextField();
+            tfGold.setFont(textFieldFont);
+            tfGold.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfGold.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelTurrets = new JLabel("Turrets:");
+            labelTurrets.setFont(labelFont);
+            tfTurrets = new JTextField();
+            tfTurrets.setFont(textFieldFont);
+            tfTurrets.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfTurrets.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelFb = new JLabel("FB:");
+            labelFb.setFont(labelFont);
+            rbFb = new JRadioButton();
+
+            JLabel labelKills = new JLabel("K:");
+            labelKills.setFont(labelFont);
+            tfK = new JTextField();
+            tfK.setFont(textFieldFont);
+            tfK.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfK.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelDeaths = new JLabel("D:");
+            labelDeaths.setFont(labelFont);
+            tfD = new JTextField();
+            tfD.setFont(textFieldFont);
+            tfD.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfD.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelAssists = new JLabel("A:");
+            labelAssists.setFont(labelFont);
+            tfA = new JTextField();
+            tfA.setFont(textFieldFont);
+            tfA.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfA.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelSpree = new JLabel("Spree:");
+            labelSpree.setFont(labelFont);
+            tfS = new JTextField();
+            tfS.setFont(textFieldFont);
+            tfS.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfS.getDocument()).setDocumentFilter(new NumberFilter());
+
+            JLabel labelDouble = new JLabel("Double:");
+            labelDouble.setFont(labelFont);
+            tfDouble = new JTextField();
+            tfDouble.setFont(textFieldFont);
+            tfDouble.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfDouble.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelTriple = new JLabel("Triple:");
+            labelTriple.setFont(labelFont);
+            tfTriple = new JTextField();
+            tfTriple.setFont(textFieldFont);
+            tfTriple.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfTriple.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelQuadra = new JLabel("Quadra:");
+            labelQuadra.setFont(labelFont);
+            tfQuadra = new JTextField();
+            tfQuadra.setFont(textFieldFont);
+            tfQuadra.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfQuadra.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelPenta = new JLabel("Penta:");
+            labelPenta.setFont(labelFont);
+            tfPenta = new JTextField();
+            tfPenta.setFont(textFieldFont);
+            tfPenta.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfPenta.getDocument()).setDocumentFilter(new NumberFilter());
+
+            JLabel labelDmgT = new JLabel("Dmg Total:");
+            labelDmgT.setFont(labelFont);
+            tfDmgT = new JTextField();
+            tfDmgT.setFont(textFieldFont);
+            tfDmgT.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfDmgT.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelDmgCh = new JLabel("Dmg to Champs:");
+            labelDmgCh.setFont(labelFont);
+            tfDmgCh = new JTextField();
+            tfDmgCh.setFont(textFieldFont);
+            tfDmgCh.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfDmgCh.getDocument()).setDocumentFilter(new NumberFilter());
+
+            JLabel labelWardP = new JLabel("Wards Placed:");
+            labelWardP.setFont(labelFont);
+            tfWardP = new JTextField();
+            tfWardP.setFont(textFieldFont);
+            tfWardP.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfWardP.getDocument()).setDocumentFilter(new NumberFilter());
+            JLabel labelWArdD = new JLabel("Wards Destroyed:");
+            labelWArdD.setFont(labelFont);
+            tfWardD = new JTextField();
+            tfWardD.setFont(textFieldFont);
+            tfWardD.setHorizontalAlignment(JTextField.CENTER);
+            ((PlainDocument) tfWardD.getDocument()).setDocumentFilter(new NumberFilter());
+
+            GroupLayout layout = new GroupLayout(this);
+            this.setLayout(layout);
+            layout.setVerticalGroup(layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup()
+                            .addComponent(labelChamp, 20, 20, 20)
+                            .addComponent(cbChamp, 25, 25, 25)
+                            .addComponent(labelKills, 20, 20, 20)
+                            .addComponent(tfK, 25, 25, 25)
+                            .addComponent(labelDeaths, 20, 20, 20)
+                            .addComponent(tfD, 25, 25, 25)
+                            .addComponent(labelAssists, 20, 20, 20)
+                            .addComponent(tfA, 25, 25, 25)
+                            .addComponent(labelSpree, 20, 20, 20)
+                            .addComponent(tfS, 25, 25, 25)
+                            .addComponent(labelDouble, 20, 20, 20)
+                            .addComponent(tfDouble, 25, 25, 25)
+                            .addComponent(labelTriple, 20, 20, 20)
+                            .addComponent(tfTriple, 25, 25, 25)
+                            .addComponent(labelQuadra, 20, 20, 20)
+                            .addComponent(tfQuadra, 25, 25, 25)
+                            .addComponent(labelPenta, 20, 20, 20)
+                            .addComponent(tfPenta, 25, 25, 25)
+                            .addComponent(labelWArdD, 20, 20, 20)
+                            .addComponent(tfWardD, 25, 25, 25))
+                    .addGroup(layout.createParallelGroup()
+                            .addComponent(labelRole, 20, 20, 20)
+                            .addComponent(cbRole, 25, 25, 25)
+                            .addComponent(labelFb, 20, 20, 20)
+                            .addComponent(rbFb, 25, 25, 25)
+                            .addComponent(labelFarm, 20, 20, 20)
+                            .addComponent(tfFarm, 25, 25, 25)
+                            .addComponent(labelGold, 20, 20, 20)
+                            .addComponent(tfGold, 25, 25, 25)
+                            .addComponent(labelTurrets, 20, 20, 20)
+                            .addComponent(tfTurrets, 25, 25, 25)
+                            .addComponent(labelDmgT, 20, 20, 20)
+                            .addComponent(tfDmgT, 25, 25, 25)
+                            .addComponent(labelDmgCh, 20, 20, 20)
+                            .addComponent(tfDmgCh, 25, 25, 25)
+                            .addComponent(labelWardP, 20, 20, 20)
+                            .addComponent(tfWardP, 25, 25, 25))
+                    .addGap(5));
+            layout.setHorizontalGroup(layout.createParallelGroup()
+                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(labelChamp, 75, 75, 75)
+                            .addComponent(cbChamp, 100, 100, 100)
+                            .addGap(5)
+                            .addComponent(labelKills, 20, 20, 20)
+                            .addComponent(tfK, 35, 35, 35)
+                            .addGap(5)
+                            .addComponent(labelDeaths, 20, 20, 20)
+                            .addComponent(tfD, 35, 35, 35)
+                            .addGap(5)
+                            .addComponent(labelAssists, 20, 20, 20)
+                            .addComponent(tfA, 35, 35, 35)
+                            .addGap(5)
+                            .addComponent(labelSpree, 45, 45, 45)
+                            .addComponent(tfS, 35, 35, 35)
+                            .addGap(5)
+                            .addComponent(labelDouble, 55, 55, 55)
+                            .addComponent(tfDouble, 25, 25, 25)
+                            .addGap(5)
+                            .addComponent(labelTriple, 45, 45, 45)
+                            .addComponent(tfTriple, 25, 25, 25)
+                            .addGap(5)
+                            .addComponent(labelQuadra, 52, 52, 52)
+                            .addComponent(tfQuadra, 25, 25, 25)
+                            .addGap(5)
+                            .addComponent(labelPenta, 45, 45, 45)
+                            .addComponent(tfPenta, 25, 25, 25)
+                            .addGap(5)
+                            .addComponent(labelWArdD, 118, 118, 118)
+                            .addComponent(tfWardD, 25, 25, 25))
+                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(labelRole, 75, 75, 75)
+                            .addComponent(cbRole, 100, 100, 100)
+                            .addGap(5)
+                            .addComponent(labelFb, 25, 25, 25)
+                            .addComponent(rbFb, 20, 20, 20)
+                            .addGap(5)
+                            .addComponent(labelFarm, 40, 40, 40)
+                            .addComponent(tfFarm, 50, 50, 50)
+                            .addGap(5)
+                            .addComponent(labelGold, 40, 40, 40)
+                            .addComponent(tfGold, 65, 65, 65)
+                            .addGap(5)
+                            .addComponent(labelTurrets, 53, 53, 53)
+                            .addComponent(tfTurrets, 25, 25, 25)
+                            .addGap(5)
+                            .addComponent(labelDmgT, 78, 78, 78)
+                            .addComponent(tfDmgT, 70, 70, 70)
+                            .addGap(5)
+                            .addComponent(labelDmgCh, 108, 108, 108)
+                            .addComponent(tfDmgCh, 60, 60, 60)
+                            .addGap(5)
+                            .addComponent(labelWardP, 97, 97, 97)
+                            .addComponent(tfWardP, 30, 30, 30)));
+        }
+
+        public void setPlayer(Player player){
+            cbChamp.setSelectedItem(player.getChamp());
+            if (!player.getRole().equals("")){
+                if (Role.isValue(player.getRole())){
+                    cbRole.setSelectedItem(player.getRole());
+                } else {
+                    String[] apiRoles = player.getRole().split(" ");
+                    cbRole.setSelectedItem(Role.getRoleByApi(apiRoles[0],apiRoles[1]).toString());
+                }
+            }
+            tfFarm.setText(player.getFarm());
+            tfGold.setText(player.getGold());
+            tfTurrets.setText(player.getTurrets());
+            if (!player.getFb().equals("")){
+                rbFb.setSelected(Boolean.parseBoolean(player.getFb()));
+            }
+            tfK.setText(player.getScore().getKills());
+            tfD.setText(player.getScore().getDeaths());
+            tfA.setText(player.getScore().getAssists());
+            tfS.setText(player.getScore().getMaxKillingSpree());
+            tfDouble.setText(player.getScore().getMulti().getDouble());
+            tfTriple.setText(player.getScore().getMulti().getTriple());
+            tfQuadra.setText(player.getScore().getMulti().getQuadra());
+            tfPenta.setText(player.getScore().getMulti().getPenta());
+            tfDmgT.setText(player.getDmg().getTotal());
+            tfDmgCh.setText(player.getDmg().getToChamps());
+            tfWardP.setText(player.getWard().getPlaced());
+            tfWardD.setText(player.getWard().getDestroyed());
+        }
+
+        public Player getPlayer(){
+            Player newPlayer = new Player();
+            newPlayer.setChamp((String) cbChamp.getSelectedItem());
+            newPlayer.setRole(String.valueOf(cbRole.getSelectedItem()));
+            newPlayer.setFarm(tfFarm.getText());
+            newPlayer.setGold(tfGold.getText());
+            newPlayer.setTurrets(tfTurrets.getText());
+            newPlayer.setFb(String.valueOf(rbFb.isSelected()));
+            newPlayer.getScore().setKills(tfK.getText());
+            newPlayer.getScore().setDeaths(tfD.getText());
+            newPlayer.getScore().setAssists(tfA.getText());
+            newPlayer.getScore().setMaxKillingSpree(tfS.getText());
+            newPlayer.getScore().getMulti().setDouble(tfDouble.getText());
+            newPlayer.getScore().getMulti().setTriple(tfTriple.getText());
+            newPlayer.getScore().getMulti().setQuadra(tfQuadra.getText());
+            newPlayer.getScore().getMulti().setPenta(tfPenta.getText());
+            newPlayer.getDmg().setTotal(tfDmgT.getText());
+            newPlayer.getDmg().setToChamps(tfDmgCh.getText());
+            newPlayer.getWard().setPlaced(tfWardP.getText());
+            newPlayer.getWard().setDestroyed(tfWardD.getText());
+            return newPlayer;
+        }
+
+        public boolean isFilled(){
+            return (cbChamp.getSelectedIndex() != -1) && (cbRole.getSelectedIndex() != -1)
+                    && !tfFarm.getText().equals("") && !tfGold.getText().equals("") && !tfTurrets.getText().equals("")
+                    && !tfK.getText().equals("") && !tfD.getText().equals("") && !tfA.getText().equals("") && !tfS.getText().equals("")
+                    && !tfDouble.getText().equals("") && !tfTriple.getText().equals("") && !tfQuadra.getText().equals("") && !tfPenta.getText().equals("")
+                    && !tfDmgT.getText().equals("") && !tfDmgCh.getText().equals("")
+                    && !tfWardP.getText().equals("") && !tfWardD.getText().equals("");
+        }
     }
 }

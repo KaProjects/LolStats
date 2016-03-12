@@ -15,7 +15,8 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "lolApi",
-    "seasons"
+    "seasons",
+        "champs"
 })
 @XmlRootElement(name = "config")
 public class Config {
@@ -23,6 +24,17 @@ public class Config {
     protected LolApi lolApi= new LolApi();
     @XmlElement(required = true)
     protected Seasons seasons= new Seasons();
+
+    public Champs getChamps() {
+        return champs;
+    }
+
+    public void setChamps(Champs champs) {
+        this.champs = champs;
+    }
+
+    @XmlElement(required = true)
+    protected Champs champs = new Champs();
 
     /**
      * Gets the value of the lolApi property.
@@ -238,6 +250,54 @@ public class Config {
                 this.id = value;
             }
 
+        }
+
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "champ"
+    })
+    public static class Champs {
+        protected List<Champ> champ;
+
+        public List<Champ> getChamp() {
+            if (champ == null) {
+                champ = new ArrayList<Champ>();
+            }
+            return this.champ;
+        }
+
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "")
+        public static class Champ {
+            @XmlAttribute(name = "name", required = true)
+            protected String name="";
+
+            /**
+             * Gets the value of the name property.
+             *
+             * @return
+             *     possible object is
+             *     {@link String }
+             *
+             */
+            public String getName() {
+                return name;
+            }
+
+            /**
+             * Sets the value of the order property.
+             *
+             * @param value
+             *     allowed object is
+             *     {@link String }
+             *
+             */
+            public void setName(String value) {
+                this.name = value;
+            }
         }
 
     }

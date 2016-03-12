@@ -33,4 +33,8 @@ public enum Role {
             return false;
         }
     }
+
+    public static String[] stringValues(){
+        return new String[]{adc.toString(), support.toString(), mid.toString(), top.toString(), jungle.toString(), UNDEFINED.toString()};
+    }
 }

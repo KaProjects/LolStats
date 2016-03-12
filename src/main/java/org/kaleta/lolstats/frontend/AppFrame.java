@@ -1,5 +1,6 @@
 package org.kaleta.lolstats.frontend;
 
+import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.action.menu.*;
 import org.kaleta.lolstats.frontend.common.MenuItemWrapper;
 import org.kaleta.lolstats.frontend.component.GameTrackingPanel;
@@ -31,6 +32,7 @@ public class AppFrame extends JFrame implements Configuration {
         int centerPosY = (screenSize.height - frameSize.height) / 2;
         this.setLocation(centerPosX, centerPosY);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setTitle(Initializer.NAME +" - "+ Initializer.VERSION+" - "+DataSourceService.getLolApiConfig().getNick());
     }
 
     private void initComponents(JPanel gameTrackingPanel){
@@ -63,7 +65,7 @@ public class AppFrame extends JFrame implements Configuration {
         gameMenu.setMnemonic(KeyEvent.VK_G);
         menuBar.add(gameMenu);
         gameMenu.add(new MenuItemWrapper(new StartTrackingGames(this, gameTrackingPanel),"NOT_IMPLEMENTED"));//TODO tooltip
-        gameMenu.add(new MenuItemWrapper(new AddRecentGame(this),"NOT_IMPLEMENTED"));//TODO tooltip
+        gameMenu.add(new MenuItemWrapper(new OpenRecentGameDialog(this),"NOT_IMPLEMENTED"));//TODO tooltip
     }
 }
 ;

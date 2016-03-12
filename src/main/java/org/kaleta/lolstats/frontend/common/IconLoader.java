@@ -32,7 +32,7 @@ public class IconLoader {
     /**
      * todo doc
      */
-    public static ImageIcon getChampIcon(String name) {
+    public static ImageIcon getChampIcon(String name) { // TODO: 3/12/16 update all icons 
         String path = "ch/" + name.replace(" ","").replace("'","").replace(".","").toLowerCase() + ".png";
         return loadIcon(path,name);
     }
