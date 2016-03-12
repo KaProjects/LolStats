@@ -1,11 +1,6 @@
 package org.kaleta.lolstats.frontend;
 
-import org.kaleta.lolstats.backend.entity.Role;
-import org.kaleta.lolstats.backend.service.DataSourceService;
-import org.kaleta.lolstats.backend.service.LolApiService;
-
 import java.io.File;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**

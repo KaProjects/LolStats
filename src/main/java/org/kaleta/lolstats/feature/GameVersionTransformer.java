@@ -1,16 +1,14 @@
 package org.kaleta.lolstats.feature;
 
-import org.kaleta.lolstats.backend.entity.Config;
 import org.kaleta.lolstats.backend.entity.Player;
+import org.kaleta.lolstats.backend.entity.Role;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.backend.manager.JaxbSeasonManager;
 import org.kaleta.lolstats.backend.manager.ManagerException;
 import org.kaleta.lolstats.backend.manager.SeasonManager;
-import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.backend.service.LolApiService;
 import org.kaleta.lolstats.ex.entities.GameRecord;
 import org.kaleta.lolstats.ex.entities.Result;
-import org.kaleta.lolstats.backend.entity.Role;
 import org.kaleta.lolstats.ex.entities.Score;
 import org.kaleta.lolstats.ex.manager.StatsManagerImpl;
 
@@ -21,12 +19,14 @@ import java.util.List;
 /**
  * Created by Stanislav Kaleta on 18.02.2016.
  */
-public class GameVersionUpdater {
+public class GameVersionTransformer {
     private final SeasonManager manager2x;
     private Season season_2x;
     private List<GameRecord> season_1x;
+    private int seasonNumber;
 
-    public GameVersionUpdater(int seasonNumber) throws ManagerException {
+    public GameVersionTransformer(int seasonNumber) throws ManagerException {
+        this.seasonNumber = seasonNumber;
         manager2x = new JaxbSeasonManager();
         season_2x = manager2x.retrieveSeason((long) seasonNumber);
         season_1x = new StatsManagerImpl("stats"+seasonNumber+".xml").retrieveStats();
@@ -34,7 +34,7 @@ public class GameVersionUpdater {
     /**
      * TODO doc
      */
-    public String updateGame_1x_to_2x() throws ManagerException {
+    public String transformGame_1x_to_2x() throws ManagerException {
         season_2x.getGame().clear();
         LolApiService apiService = new LolApiService();
 
@@ -52,7 +52,7 @@ public class GameVersionUpdater {
             if (date.equals(gDate)){
 
             } else {
-                List<Season.Game> foundGames = apiService.tryFindGames(5,date,new String[]{"RANKED_SOLO_5x5","TEAM_BUILDER_DRAFT_RANKED_5x5"});
+                List<Season.Game> foundGames = apiService.tryFindGames(seasonNumber,date,new String[]{"RANKED_SOLO_5x5","TEAM_BUILDER_DRAFT_RANKED_5x5"});
                 for (GameRecord dbGame : tempGameList){
                     int MatchedGameCounter = 0;
                     Season.Game matchedGame = null;
@@ -123,7 +123,7 @@ public class GameVersionUpdater {
     /**
      * TODO doc
      */
-    public String transformRank1xTo2x() throws ManagerException {
+    public String transformRank_1x_to_2x() throws ManagerException {
         if (season_1x.size() != season_2x.getGame().size()){
             return "Error: different number of games in each season!";
         }
@@ -280,7 +280,7 @@ public class GameVersionUpdater {
     /**
      * TODO doc
      */
-    public String updateRole_1x_to_2x() throws ManagerException {
+    public String transformRole_1x_to_2x() throws ManagerException {
 
         int roleAlreadySet = 0;
         int roleNok = 0;

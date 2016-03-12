@@ -1,8 +1,6 @@
 package org.kaleta.lolstats.frontend.action.menu;
 
 import org.kaleta.lolstats.backend.entity.Season;
-import org.kaleta.lolstats.backend.manager.JaxbSeasonManager;
-import org.kaleta.lolstats.backend.manager.ManagerException;
 import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.Configuration;
 import org.kaleta.lolstats.frontend.dialog.AddGameDialog;

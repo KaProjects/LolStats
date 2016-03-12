@@ -7,11 +7,8 @@ import org.kaleta.lolstats.frontend.component.RecentGamePanel;
 
 import javax.swing.*;
 import java.awt.Component;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

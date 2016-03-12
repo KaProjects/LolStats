@@ -2,17 +2,12 @@ package org.kaleta.lolstats.frontend.component;
 
 import org.kaleta.lolstats.backend.entity.GameInfo;
 import org.kaleta.lolstats.backend.entity.Season;
-import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.backend.service.LolApiService;
-import org.kaleta.lolstats.frontend.dialog.AddGameDialog;
 
 import javax.swing.*;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;

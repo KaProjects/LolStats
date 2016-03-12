@@ -1,10 +1,8 @@
 package org.kaleta.lolstats.frontend.action.menu;
 
-import org.kaleta.lolstats.backend.service.LolApiService;
 import org.kaleta.lolstats.frontend.Configuration;
 import org.kaleta.lolstats.frontend.dialog.AddRecentGameDialog;
 
-import javax.swing.*;
 import java.awt.Component;
 
 /**

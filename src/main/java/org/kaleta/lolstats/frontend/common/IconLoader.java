@@ -2,7 +2,6 @@ package org.kaleta.lolstats.frontend.common;
 
 import org.kaleta.lolstats.frontend.Initializer;
 
-import javax.print.DocFlavor;
 import javax.swing.*;
 import java.net.URL;
 
@@ -32,7 +31,7 @@ public class IconLoader {
     /**
      * todo doc
      */
-    public static ImageIcon getChampIcon(String name) { // TODO: 3/12/16 update all icons 
+    public static ImageIcon getChampIcon(String name) { // TODO: 3/12/16 update all icons
         String path = "ch/" + name.replace(" ","").replace("'","").replace(".","").toLowerCase() + ".png";
         return loadIcon(path,name);
     }

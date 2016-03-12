@@ -1,8 +1,6 @@
 package org.kaleta.lolstats.frontend.dialog;
 
-import org.jdatepicker.ComponentColorDefaults;
-import org.jdatepicker.ComponentFormatDefaults;
-import org.jdatepicker.JDatePicker;
+
 import org.kaleta.lolstats.backend.entity.Player;
 import org.kaleta.lolstats.backend.entity.Role;
 import org.kaleta.lolstats.backend.entity.Season;
@@ -12,12 +10,10 @@ import org.kaleta.lolstats.frontend.component.ComboBoxRenderer;
 
 import javax.swing.*;
 import javax.swing.text.PlainDocument;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -25,7 +21,8 @@ import java.util.Date;
  */
 public class AddGameDialog extends JDialog {
     private JTextField textFieldGameNumber;
-    private JDatePicker datePicker;
+//    private JDatePicker datePicker; // TODO when 2.0 jdatepicker releasted
+    private JTextField tfDatePicker;
     private JComboBox comboBoxTier;
     private JComboBox comboBoxDivision;
     private JTextField textFieldLp;
@@ -79,10 +76,13 @@ public class AddGameDialog extends JDialog {
 
         JLabel labelDate = new JLabel("Date:");
         labelDate.setFont(labelFont);
-        ComponentFormatDefaults.getInstance().setFormat(ComponentFormatDefaults.Key.SELECTED_DATE_FIELD, new SimpleDateFormat("dd.MM.yyyy"));
-        ComponentColorDefaults.getInstance().setColor(ComponentColorDefaults.Key.BG_MONTH_SELECTOR, Color.LIGHT_GRAY);
-        datePicker = new JDatePicker(new Date(System.currentTimeMillis()));
-        datePicker.getComponent(0).setFont(textFieldFont);
+//        ComponentFormatDefaults.getInstance().setFormat(ComponentFormatDefaults.Key.SELECTED_DATE_FIELD, new SimpleDateFormat("dd.MM.yyyy"));
+//        ComponentColorDefaults.getInstance().setColor(ComponentColorDefaults.Key.BG_MONTH_SELECTOR, Color.LIGHT_GRAY);
+//        datePicker = new JDatePicker(new Date(System.currentTimeMillis()));
+//        datePicker.getComponent(0).setFont(textFieldFont);
+        tfDatePicker = new JTextField();
+        tfDatePicker.setFont(textFieldFont);
+        tfDatePicker.setHorizontalAlignment(JTextField.CENTER);
 
         JLabel labelTier = new JLabel("Tier:");
         labelTier.setFont(labelFont);
@@ -239,7 +239,7 @@ public class AddGameDialog extends JDialog {
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(labelDate, 100, 100, 100)
                                                 .addGap(5)
-                                                .addComponent(datePicker, 140, 140, 140))
+                                                .addComponent(tfDatePicker, 140, 140, 140))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(labelLength, 100, 100, 100)
                                                 .addGap(5)
@@ -314,7 +314,7 @@ public class AddGameDialog extends JDialog {
                                 .addGap(5)
                                 .addGroup(layout.createParallelGroup()
                                         .addComponent(labelDate)
-                                        .addComponent(datePicker, 25, 25, 25))
+                                        .addComponent(tfDatePicker, 25, 25, 25))
                                 .addGap(5)
                                 .addGroup(layout.createParallelGroup()
                                         .addComponent(labelLength)
@@ -409,7 +409,10 @@ public class AddGameDialog extends JDialog {
                 if (comboBoxTier.getSelectedItem() != null && comboBoxDivision.getSelectedItem() == null) {
                     msg = "division not selected!";
                 }
-                if (datePicker.getModel().getValue() == null) {
+//                if (datePicker.getModel().getValue() == null) {
+//                    msg = "date not set!";
+//                }
+                if (tfDatePicker.getText().equals("")){
                     msg = "date not set!";
                 }
                 if (textFieldGameNumber.getText().equals("")) {
@@ -435,13 +438,14 @@ public class AddGameDialog extends JDialog {
         if (!game.getNumber().equals("")) {
             textFieldGameNumber.setText(game.getNumber());
         }
-        if (game.getDate().equals("")) {
-            datePicker.getModel().setDate(0, 0, 0);
-        } else {
-            org.kaleta.lolstats.ex.entities.Date date = new org.kaleta.lolstats.ex.entities.Date();
-            date.setStringDate(game.getDate());
-            datePicker.getModel().setDate(date.getYear(), date.getMonth() - 1, date.getDay());
-        }
+//        if (game.getDate().equals("")) {
+//            datePicker.getModel().setDate(0, 0, 0);
+//        } else {
+//            org.kaleta.lolstats.ex.entities.Date date = new org.kaleta.lolstats.ex.entities.Date();
+//            date.setStringDate(game.getDate());
+//            datePicker.getModel().setDate(date.getYear(), date.getMonth() - 1, date.getDay());
+//        }
+        tfDatePicker.setText(game.getDate());
         if (!game.getLength().equals("")) {
             spinnerLength.getModel().setValue(new Date(Integer.parseInt(game.getLength().substring(0, 2)) * 60000
                     + Integer.parseInt(game.getLength().substring(2, 4)) * 1000));
@@ -488,7 +492,8 @@ public class AddGameDialog extends JDialog {
         Season.Game newGame = new Season.Game();
 
         newGame.setNumber(textFieldGameNumber.getText());
-        newGame.setDate(new SimpleDateFormat("ddMMyyyy").format(datePicker.getModel().getValue()));
+        //newGame.setDate(new SimpleDateFormat("ddMMyyyy").format(datePicker.getModel().getValue()));
+        newGame.setDate(tfDatePicker.getText());
         if (comboBoxTier.getSelectedItem() != null){
             newGame.getRank().setTier(((String)comboBoxTier.getSelectedItem()).toUpperCase());
             newGame.getRank().setDivision((String) comboBoxDivision.getSelectedItem());
