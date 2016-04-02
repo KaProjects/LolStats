@@ -310,10 +310,23 @@ public class LolApiService {
                     }
                 }
                 if (isQueue){
-                    if (date.equals(new SimpleDateFormat("ddMMyyyy").format(((HashMap) allPlayerMatches[g]).get("timestamp")))) {
+                    if (date.equals("")){
                         long matchId = (long) ((HashMap) allPlayerMatches[g]).get("matchId");
-                        Season.Game game = getGameById(String.valueOf(matchId),false);
-                        outputGames.add(game);
+                        try {
+                            Season.Game game = getGameById(String.valueOf(matchId),false);
+                            outputGames.add(game);
+                        } catch (Exception e){
+                            Season.Game errGame = new Season.Game();
+                            errGame.setDate(new SimpleDateFormat("ddMMyyyy").format(((HashMap) allPlayerMatches[g]).get("timestamp")));
+                            outputGames.add(errGame);
+                            System.out.println("ERROR!!!"+g +" "+matchId+" "+e.getMessage()+" "+e.getClass().toString());
+                        }
+                    } else {
+                        if (date.equals(new SimpleDateFormat("ddMMyyyy").format(((HashMap) allPlayerMatches[g]).get("timestamp")))) {
+                            long matchId = (long) ((HashMap) allPlayerMatches[g]).get("matchId");
+                            Season.Game game = getGameById(String.valueOf(matchId),false);
+                            outputGames.add(game);
+                        }
                     }
                 }
             }

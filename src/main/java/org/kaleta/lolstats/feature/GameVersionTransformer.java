@@ -289,7 +289,7 @@ public class GameVersionTransformer {
         for (int g=0;g<season_1x.size();g++){
             GameRecord game1x = season_1x.get(g);
             Season.Game game2x = season_2x.getGame().get(g);
-            if (game1x.getMyRole().toString().equals(game2x.getUser().getRole())){
+            if (Role.isValue(game2x.getUser().getRole()) /*game1x.getMyRole().toString().equals(game2x.getUser().getRole())*/){
                 roleAlreadySet++;
                 continue;
             }
@@ -301,6 +301,9 @@ public class GameVersionTransformer {
             Player tempEnemyDuo = null;
             Player tempUserDuo = null;
             for (Player player : players){
+                if (player.getRole().equals("") || player.getRole().split(" ").length !=2){
+                    continue;
+                }
                 String line = player.getRole().split(" ")[0];
                 String role = player.getRole().split(" ")[1];
                 if (line.equals("MIDDLE") && role.equals("SOLO")){
@@ -362,7 +365,7 @@ public class GameVersionTransformer {
             if (rolesCheck[0] == 2 && rolesCheck[1] == 2 && rolesCheck[2] == 2 && rolesCheck[3] == 2 && rolesCheck[4] == 2){
                 String userLine = game2x.getUser().getRole().split(" ")[0];
                 String userRole = game2x.getUser().getRole().split(" ")[1];
-                if (game1x.getMyRole().equals(Role.getRoleByApi(userLine,userRole))){
+                if (true/*game1x.getMyRole().equals(Role.getRoleByApi(userLine,userRole))*/){
                     for (Player player : players) {
                         String line = player.getRole().split(" ")[0];
                         String role = player.getRole().split(" ")[1];
