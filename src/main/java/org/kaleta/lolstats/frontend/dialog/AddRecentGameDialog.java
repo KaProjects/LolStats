@@ -17,25 +17,25 @@ import java.util.List;
 public class AddRecentGameDialog extends JDialog{
     private JPanel panelGames;
 
-    public AddRecentGameDialog(Component parent){
+    public AddRecentGameDialog(Component parent) {
         this.setTitle("Add Recent Game");
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setModal(true);
         this.setLocationRelativeTo(parent);
 
-        this.getContentPane().setLayout(new BoxLayout(this.getContentPane(),BoxLayout.Y_AXIS));
+        this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 
         panelGames = new JPanel();
-        panelGames.setLayout(new BoxLayout(panelGames,BoxLayout.Y_AXIS));
+        panelGames.setLayout(new BoxLayout(panelGames, BoxLayout.Y_AXIS));
         panelGames.add(new JLabel("Searching recent games..."));
         this.getContentPane().add(panelGames);
 
         new Thread(() -> {
-            LolApiService service =  new LolApiService();
+            LolApiService service = new LolApiService();
             List<JPanel> panels = new ArrayList<>();
-            for (GameInfo info : service.getRecentRankedGamesInfo()){
-                Season.Game game = service.getGameById(info.getId(),true);
-                RecentGamePanel panel = new RecentGamePanel(game,parent);
+            for (GameInfo info : service.getRecentRankedGamesInfo()) {
+                Season.Game game = service.getGameById(info.getId(), true);
+                RecentGamePanel panel = new RecentGamePanel(game, parent);
                 panels.add(panel);
             }
             panelGames.removeAll();

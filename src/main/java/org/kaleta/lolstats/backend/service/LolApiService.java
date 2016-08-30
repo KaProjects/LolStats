@@ -48,7 +48,7 @@ public class LolApiService {
         playerId = String.valueOf(((HashMap)players.get(playerNick.toLowerCase().replace(" ",""))).get("id"));
 
         recentMatchUrl = protocol + domain + "/api/lol/" + region + "/v1.3/game/by-summoner/" + playerId + "/recent" + keyParameter;
-        champByIdUrl = protocol + domain + "/api/lol/static-data/" + region + "/v1.2/champion/" + "{ID}" + keyParameter;
+        champByIdUrl = protocol + "global.api.pvp.net" + "/api/lol/static-data/" + region + "/v1.2/champion/" + "{ID}" + keyParameter;
         matchByIdUrl = protocol + domain + "/api/lol/" + region + "/v2.2/match/{ID}" + keyParameter;
         matchListUrl = protocol + domain + "/api/lol/" + region + "/v2.2/matchlist/by-summoner/" + playerId + keyParameter;
         champListUrl = protocol + domain + "/api/lol/" + region + "/v1.2/champion" + keyParameter;

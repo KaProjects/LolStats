@@ -1,7 +1,5 @@
 package org.kaleta.lolstats.frontend;
 
-import org.kaleta.lolstats.feature.analytics.lp.graph.ShowLpGraph;
-
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -24,10 +22,9 @@ public class Initializer {
             @Override
             public void run() {
                 try {
+                    new AppFrame().setVisible(true);
 
-                    //new AppFrame().setVisible(true);
-
-                    new ShowLpGraph(new AppFrame()).actionPerformed(null);
+                    //new ShowLpGraph(new AppFrame()).actionPerformed(null);
 
                 } catch (Exception e) {
                     e.printStackTrace();

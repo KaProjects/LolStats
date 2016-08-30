@@ -1,8 +1,5 @@
 package org.kaleta.lolstats.ex.loader;
 
-import org.apache.pdfbox.exceptions.CryptographyException;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.util.PDFTextStripper;
 import org.kaleta.lolstats.ex.ServiceFailureException;
 import org.kaleta.lolstats.ex.entities.*;
 
@@ -67,29 +64,30 @@ public class PDFResultLoader {
     }
 
     private String loadText(File file) {
-        PDDocument document = null;
-        String output = null;
-        try {
-            document = PDDocument.load(file);
-            if (document.isEncrypted()) {
-                document.decrypt("");
-            }
-            PDFTextStripper textStripper = new PDFTextStripper();
-            output = textStripper.getText(document);
-        } catch (IOException e) {
-            throw new ServiceFailureException(e.getMessage());
-        } catch (CryptographyException e) {
-            throw new ServiceFailureException("Error: Document is encrypted with a password.");
-        } finally {
-            try {
-                if (document != null) {
-                    document.close();
-                }
-            } catch (IOException e) {
-                throw new ServiceFailureException(e.getMessage());
-            }
-        }
-        return output;
+//        PDDocument document = null;
+//        String output = null;
+//        try {
+//            document = PDDocument.load(file);
+//            if (document.isEncrypted()) {
+//                document.decrypt("");
+//            }
+//            PDFTextStripper textStripper = new PDFTextStripper();
+//            output = textStripper.getText(document);
+//        } catch (IOException e) {
+//            throw new ServiceFailureException(e.getMessage());
+//        } catch (CryptographyException e) {
+//            throw new ServiceFailureException("Error: Document is encrypted with a password.");
+//        } finally {
+//            try {
+//                if (document != null) {
+//                    document.close();
+//                }
+//            } catch (IOException e) {
+//                throw new ServiceFailureException(e.getMessage());
+//            }
+//        }
+//        return output;
+        return null;
     }
 
     private int countPositionInPDF(String player, List<String> lines){
