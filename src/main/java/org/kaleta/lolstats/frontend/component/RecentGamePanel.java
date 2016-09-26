@@ -1,5 +1,6 @@
 package org.kaleta.lolstats.frontend.component;
 
+import org.kaleta.lolstats.backend.entity.GameInfo;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.dialog.AddGameDialog;
@@ -46,6 +47,16 @@ public class RecentGamePanel extends JPanel {
 
             }
         });
+    }
+
+    public RecentGamePanel(GameInfo info){
+        String labelText = "ID " + info.getId() + " not found";
+        JLabel labelInfo = new JLabel(labelText);
+        labelInfo.setFont(font);
+
+        this.add(labelInfo);
+        this.setBorder(BorderFactory.createLineBorder(Color.RED));
+        this.setBackground(Color.getHSBColor(0/360f,0.5f,0.75f));
     }
 
     public RecentGamePanel(String time){

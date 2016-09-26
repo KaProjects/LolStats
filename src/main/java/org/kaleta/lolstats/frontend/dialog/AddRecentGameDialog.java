@@ -3,6 +3,7 @@ package org.kaleta.lolstats.frontend.dialog;
 import org.kaleta.lolstats.backend.entity.GameInfo;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.backend.service.LolApiService;
+import org.kaleta.lolstats.backend.service.ServiceFailureException;
 import org.kaleta.lolstats.frontend.component.RecentGamePanel;
 
 import javax.swing.*;
@@ -34,9 +35,15 @@ public class AddRecentGameDialog extends JDialog{
             LolApiService service = new LolApiService();
             List<JPanel> panels = new ArrayList<>();
             for (GameInfo info : service.getRecentRankedGamesInfo()) {
-                Season.Game game = service.getGameById(info.getId(), true);
-                RecentGamePanel panel = new RecentGamePanel(game, parent);
-                panels.add(panel);
+                try {
+                    Season.Game game = service.getGameById(info.getId(), true);
+                    RecentGamePanel panel = new RecentGamePanel(game, parent);
+                    panels.add(panel);
+                } catch (ServiceFailureException e){
+                    RecentGamePanel panel = new RecentGamePanel(info);
+                    panels.add(panel);
+                }
+
             }
             panelGames.removeAll();
             panelGames.revalidate();
