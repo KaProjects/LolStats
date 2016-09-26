@@ -3,10 +3,10 @@ package org.kaleta.lolstats.frontend;
 import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.action.menu.*;
 import org.kaleta.lolstats.frontend.common.MenuItemWrapper;
+import org.kaleta.lolstats.frontend.component.GameListPanel;
 import org.kaleta.lolstats.frontend.component.GameTrackingPanel;
 
 import javax.swing.*;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
@@ -37,12 +37,14 @@ public class AppFrame extends JFrame implements Configuration {
     }
 
     private void initComponents(JPanel gameTrackingPanel){
+        JTabbedPane pane = new JTabbedPane();
 
-        this.getContentPane().add(gameTrackingPanel);
+        JScrollPane paneGames = new JScrollPane(new GameListPanel());
+        pane.addTab("Games", paneGames);
 
-        JTextField textField = new JTextField();
-        textField.setBackground(Color.CYAN);
+        pane.addTab("Live", gameTrackingPanel);
 
+        this.getContentPane().add(pane);
 
     }
 
@@ -55,10 +57,11 @@ public class AppFrame extends JFrame implements Configuration {
         menuBar.add(fileMenu);
         JMenu newMenu = new JMenu("Add");
         fileMenu.add(newMenu);
-        newMenu.add(new MenuItemWrapper(new OpenAddGameDialog(this), "NOT_IMPLEMENTED"));//todo tooltip
+        newMenu.add(new MenuItemWrapper(new OpenAddGameDialog(this)));
         fileMenu.add(new JSeparator());
         fileMenu.add(new MenuItemWrapper(new OpenSettingsDialog(this),
                 KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.SHIFT_MASK + InputEvent.CTRL_MASK)));
+        fileMenu.add(new MenuItemWrapper(new UpdateChampionList(this)));
         fileMenu.add(new JSeparator());
         fileMenu.add(new MenuItemWrapper(new PerformExit(this),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0)));
@@ -66,8 +69,8 @@ public class AppFrame extends JFrame implements Configuration {
         JMenu gameMenu = new JMenu("Game");
         gameMenu.setMnemonic(KeyEvent.VK_G);
         menuBar.add(gameMenu);
-        gameMenu.add(new MenuItemWrapper(new StartTrackingGames(this, gameTrackingPanel),"NOT_IMPLEMENTED"));//TODO tooltip
-        gameMenu.add(new MenuItemWrapper(new OpenRecentGameDialog(this),"NOT_IMPLEMENTED"));//TODO tooltip
+        gameMenu.add(new MenuItemWrapper(new StartTrackingGames(this, gameTrackingPanel), "Starts tracking new games from LoL API"));
+        gameMenu.add(new MenuItemWrapper(new OpenRecentGameDialog(this),"Loads last 10 games from LoL API"));
     }
 }
 ;

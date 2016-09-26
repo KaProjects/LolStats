@@ -33,7 +33,20 @@ public class DataSourceService {
      * TODo doc.
      */
     public static void updateChampionList(){
-        // TODO: 3/11/16 load from api service and apply to config
+        try {
+            ConfigManager manager = new JaxbConfigManager();
+            Config config =  manager.retrieveConfig();
+            config.getChamps().getChamp().clear();
+            for (String champName : new LolApiService().getChampionList()){
+                Config.Champs.Champ champ = new Config.Champs.Champ();
+                champ.setName(champName);
+                config.getChamps().getChamp().add(champ);
+            }
+            manager.updateConfig(config);
+        } catch (ManagerException e){
+            Initializer.LOG.severe(ErrorDialog.getExceptionStackTrace(e));
+            throw new ServiceFailureException(e);
+        }
     }
 
     /**
@@ -123,6 +136,19 @@ public class DataSourceService {
         try {
             String actualSeasonId = new JaxbConfigManager().retrieveConfig().getSeasons().getActualSeason();
             return new JaxbSeasonManager().retrieveSeason(Long.parseLong(actualSeasonId)).getGame().size();
+        } catch (ManagerException e){
+            Initializer.LOG.severe(ErrorDialog.getExceptionStackTrace(e));
+            throw new ServiceFailureException(e);
+        }
+    }
+
+    /**
+     * TODo doc.
+     */
+    public static List<Season.Game> getAllGames(){
+        try {
+            String actualSeasonId = new JaxbConfigManager().retrieveConfig().getSeasons().getActualSeason();
+            return new JaxbSeasonManager().retrieveSeason(Long.parseLong(actualSeasonId)).getGame();
         } catch (ManagerException e){
             Initializer.LOG.severe(ErrorDialog.getExceptionStackTrace(e));
             throw new ServiceFailureException(e);

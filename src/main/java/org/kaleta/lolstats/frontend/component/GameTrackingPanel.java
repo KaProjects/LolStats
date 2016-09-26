@@ -21,12 +21,12 @@ public class GameTrackingPanel extends JPanel{
     private JPanel panelFoundGames;
     private List<String> gameIds;
     private Component parent;
+    private JButton buttonCancel;
 
     public GameTrackingPanel(Component parent){
         this.parent = parent;
         gameIds = new ArrayList<>();
         this.setBackground(Color.BLUE);
-        this.setVisible(false);
 
         panelFoundGames = new JPanel();
         panelFoundGames.setBackground(Color.RED);
@@ -34,15 +34,19 @@ public class GameTrackingPanel extends JPanel{
         this.add(panelFoundGames);
 
 
-        JButton buttonCancel = new JButton("Cancel");
+        buttonCancel = new JButton("Cancel");
         buttonCancel.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 working = false;
-                GameTrackingPanel.this.setVisible(false);
+                buttonCancel.setVisible(false);
+                panelFoundGames.setVisible(false);
             }
         });
         this.add(buttonCancel);
+
+        buttonCancel.setVisible(false);
+        panelFoundGames.setVisible(false);
     }
 
     public void startTracking() {
@@ -54,7 +58,8 @@ public class GameTrackingPanel extends JPanel{
         panelFoundGames.add(new RecentGamePanel(new SimpleDateFormat("HH:mm - dd.MM.yyyy").format(startTime)));
         panelFoundGames.repaint();
         panelFoundGames.revalidate();
-        this.setVisible(true);
+        buttonCancel.setVisible(true);
+        panelFoundGames.setVisible(true);
 
         LolApiService service = new LolApiService();
         while (working) {
