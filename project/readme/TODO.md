@@ -6,7 +6,7 @@
 	+ novy role graph - kazda rola ine podmienky na performance
 	+ LP graph per date dorobit
 	+ porozmyslat nad dalsimi grafmi
- * pridat dalsie ikonky pre champv + ikonku pre celu appku(L)
+ * pridat dalsie ikonky pre champv + ikonku pre celu appku(L)(+ nastavit pri builde)
     + try ImageIcon class to load icons (new ImageIcon(path))
 
 # Ideas
