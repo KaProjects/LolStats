@@ -1,8 +1,11 @@
 # 2.0
-Released: in progress
+Released: 30.1.2017
 
     Migrated to GitHub.
     Completely reworked backend - XSD schemas, JAXB managers & entity models, data source & LoL API services.
+    Added game tracking utility.
+    Updated to season 7.
+    Bug fixes.
 
 ### 1.7.1
 Released: 8.2.2016

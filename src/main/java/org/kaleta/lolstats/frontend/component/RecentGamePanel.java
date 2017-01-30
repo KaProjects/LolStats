@@ -3,12 +3,12 @@ package org.kaleta.lolstats.frontend.component;
 import org.kaleta.lolstats.backend.entity.GameInfo;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.backend.service.DataSourceService;
+import org.kaleta.lolstats.frontend.Configuration;
 import org.kaleta.lolstats.frontend.common.Constants;
 import org.kaleta.lolstats.frontend.dialog.AddGameDialog;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -36,6 +36,7 @@ public class RecentGamePanel extends JPanel {
                     dialog.setVisible(true);
                     if (dialog.getResult()){
                         DataSourceService.addNewGame(dialog.getGame());
+                        ((Configuration) parent).updateGameList();
                         RecentGamePanel.this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
                         RecentGamePanel.this.setBackground(Color.LIGHT_GRAY);
                         RecentGamePanel.this.repaint();

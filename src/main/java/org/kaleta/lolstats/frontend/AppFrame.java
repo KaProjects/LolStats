@@ -7,8 +7,7 @@ import org.kaleta.lolstats.frontend.component.GameListPanel;
 import org.kaleta.lolstats.frontend.component.GameTrackingPanel;
 
 import javax.swing.*;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -16,6 +15,7 @@ import java.awt.event.KeyEvent;
  * Created by Stanislav Kaleta on 19.02.2016.
  */
 public class AppFrame extends JFrame implements Configuration {
+    private GameListPanel gameListPanel;
 
     public AppFrame(){
 
@@ -25,8 +25,8 @@ public class AppFrame extends JFrame implements Configuration {
 
 
 
-
         this.pack();
+        this.setSize(new Dimension(this.getSize().width, 500));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = this.getSize();
         int centerPosX = (screenSize.width - frameSize.width) / 2;
@@ -39,7 +39,8 @@ public class AppFrame extends JFrame implements Configuration {
     private void initComponents(JPanel gameTrackingPanel){
         JTabbedPane pane = new JTabbedPane();
 
-        JScrollPane paneGames = new JScrollPane(new GameListPanel());
+        gameListPanel = new GameListPanel();
+        JScrollPane paneGames = new JScrollPane(gameListPanel);
         pane.addTab("Games", paneGames);
 
         pane.addTab("Live", gameTrackingPanel);
@@ -72,5 +73,9 @@ public class AppFrame extends JFrame implements Configuration {
         gameMenu.add(new MenuItemWrapper(new StartTrackingGames(this, gameTrackingPanel), "Starts tracking new games from LoL API"));
         gameMenu.add(new MenuItemWrapper(new OpenRecentGameDialog(this),"Loads last 10 games from LoL API"));
     }
+
+    @Override
+    public void updateGameList() {
+        gameListPanel.update();
+    }
 }
-;

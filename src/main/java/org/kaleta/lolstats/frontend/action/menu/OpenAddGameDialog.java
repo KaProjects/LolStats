@@ -5,7 +5,7 @@ import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.Configuration;
 import org.kaleta.lolstats.frontend.dialog.AddGameDialog;
 
-import java.awt.Component;
+import java.awt.*;
 
 /**
  * Created by Stanislav Kaleta on 05.03.2016.
@@ -22,6 +22,7 @@ public class OpenAddGameDialog extends MenuAction{
         if (dialog.getResult()){
             Season.Game newGame = dialog.getGame();
             DataSourceService.addNewGame(newGame);
+            getConfiguration().updateGameList();
         }
     }
 }
