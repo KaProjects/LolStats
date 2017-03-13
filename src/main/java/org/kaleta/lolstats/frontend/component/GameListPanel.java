@@ -5,7 +5,6 @@ import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.common.Constants;
 
 import javax.swing.*;
-import java.awt.Color;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -44,7 +43,7 @@ public class GameListPanel extends JPanel{
                     + " : " + String.format("%02d", Integer.parseInt(game.getUser().getScore().getAssists())));
 
             JPanel panel = new JPanel();
-            panel.setBorder(BorderFactory.createLineBorder(Boolean.parseBoolean(game.getUserTeam().getWin()) ? Color.GREEN : Color.RED));
+            panel.setBorder(BorderFactory.createLineBorder(panel.getForeground()));
             panel.setBackground(Boolean.parseBoolean(game.getUserTeam().getWin()) ? Constants.PANEL_BACKGROUND_GREEN : Constants.PANEL_BACKGROUND_RED);
 
             GroupLayout layout = new GroupLayout(panel);
