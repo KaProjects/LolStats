@@ -4,8 +4,7 @@ import org.kaleta.lolstats.feature.analytics.GraphFrame;
 import org.kaleta.lolstats.frontend.Configuration;
 import org.kaleta.lolstats.frontend.action.menu.MenuAction;
 
-import java.awt.Component;
-import java.awt.Frame;
+import java.awt.*;
 
 /**
  * Created by Stanislav Kaleta on 02.04.2016.

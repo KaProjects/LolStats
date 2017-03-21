@@ -201,7 +201,7 @@ public class Season {
         "userMate",
         "opponent"
     })
-    public static class Game {
+    public static class Game implements Comparable<Game>{
 
         @XmlElement(required = true)
         protected Rank rank= new Rank();
@@ -222,252 +222,66 @@ public class Season {
         @XmlAttribute(name = "length", required = true)
         protected String length="";
 
-        /**
-         * Gets the value of the rank property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link Rank }
-         *     
-         */
+        @Override
+        public int compareTo(Game o) {
+            return Integer.parseInt(this.getNumber()) - Integer.parseInt(o.getNumber());
+        }
+
         public Rank getRank() {
             return rank;
         }
-
-        /**
-         * Sets the value of the rank property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Rank }
-         *     
-         */
         public void setRank(Rank value) {
             this.rank = value;
         }
-
-        /**
-         * Gets the value of the userTeam property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link Team }
-         *     
-         */
         public Team getUserTeam() {
             return userTeam;
         }
-
-        /**
-         * Sets the value of the userTeam property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Team }
-         *     
-         */
         public void setUserTeam(Team value) {
             this.userTeam = value;
         }
-
-        /**
-         * Gets the value of the enemyTeam property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link Team }
-         *     
-         */
         public Team getEnemyTeam() {
             return enemyTeam;
         }
-
-        /**
-         * Sets the value of the enemyTeam property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Team }
-         *     
-         */
         public void setEnemyTeam(Team value) {
             this.enemyTeam = value;
         }
-
-        /**
-         * Gets the value of the user property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link Player }
-         *     
-         */
         public Player getUser() {
             return user;
         }
-
-        /**
-         * Sets the value of the user property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Player }
-         *     
-         */
         public void setUser(Player value) {
             this.user = value;
         }
-
-        /**
-         * Gets the value of the userMates property.
-         * 
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the userMates property.
-         * 
-         * <p>
-         * For example, to add a new item, do as follows:
-         * <pre>
-         *    getUserMates().add(newItem);
-         * </pre>
-         * 
-         * 
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link Player }
-         * 
-         * 
-         */
         public List<Player> getUserMate() {
             if (userMate == null) {
                 userMate = new ArrayList<Player>();
             }
             return this.userMate;
         }
-
-        /**
-         * Gets the value of the opponentMates property.
-         * 
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the opponentMates property.
-         * 
-         * <p>
-         * For example, to add a new item, do as follows:
-         * <pre>
-         *    getOpponentMates().add(newItem);
-         * </pre>
-         * 
-         * 
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link Player }
-         * 
-         * 
-         */
         public List<Player> getOpponent() {
             if (opponent == null) {
                 opponent = new ArrayList<Player>();
             }
             return this.opponent;
         }
-
-        /**
-         * Gets the value of the number property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
         public String getNumber() {
             return number;
         }
-
-        /**
-         * Sets the value of the number property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
         public void setNumber(String value) {
             this.number = value;
         }
-
-        /**
-         * Gets the value of the date property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
         public String getDate() {
             return date;
         }
-
-        /**
-         * Sets the value of the date property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
         public void setDate(String value) {
             this.date = value;
         }
-
-        /**
-         * Gets the value of the length property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
         public String getLength() {
             return length;
         }
-
-        /**
-         * Sets the value of the length property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
         public void setLength(String value) {
             this.length = value;
         }
 
-
-        /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
-         * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;attribute name="tier" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="division" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="lp" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
-         * </pre>
-         * 
-         * 
-         */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
         public static class Rank {
@@ -479,80 +293,24 @@ public class Season {
             @XmlAttribute(name = "lp", required = true)
             protected String lp="";
 
-            /**
-             * Gets the value of the tier property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
-             */
             public String getTier() {
                 return tier;
             }
-
-            /**
-             * Sets the value of the tier property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
-             */
             public void setTier(String value) {
                 this.tier = value;
             }
-
-            /**
-             * Gets the value of the division property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
-             */
             public String getDivision() {
                 return division;
             }
-
-            /**
-             * Sets the value of the division property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
-             */
             public void setDivision(String value) {
                 this.division = value;
             }
-
-            /**
-             * Gets the value of the lp property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
-             */
             public String getLp() {
                 return lp;
             }
-
-            /**
-             * Sets the value of the lp property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
-             */
             public void setLp(String value) {
                 this.lp = value;
             }
-
         }
-
     }
-
 }

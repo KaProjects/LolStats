@@ -5,7 +5,7 @@ import org.kaleta.lolstats.frontend.Configuration;
 import org.kaleta.lolstats.frontend.Initializer;
 
 import javax.swing.*;
-import java.awt.Component;
+import java.awt.*;
 
 /**
  * Created by Stanislav Kaleta on 26.09.2016.

@@ -2,8 +2,7 @@ package org.kaleta.lolstats.feature.analytics.lp.graph;
 
 import org.kaleta.lolstats.backend.entity.Season;
 
-import java.awt.Container;
-import java.util.List;
+import java.awt.*;
 
 /**
  * Created by Stanislav Kaleta on 02.04.2016.

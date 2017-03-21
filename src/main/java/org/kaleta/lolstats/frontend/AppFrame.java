@@ -5,6 +5,7 @@ import org.kaleta.lolstats.frontend.action.menu.*;
 import org.kaleta.lolstats.frontend.common.MenuItemWrapper;
 import org.kaleta.lolstats.frontend.component.GameListPanel;
 import org.kaleta.lolstats.frontend.component.GameTrackingPanel;
+import org.kaleta.lolstats.frontend.component.stats.StatsPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +17,7 @@ import java.awt.event.KeyEvent;
  */
 public class AppFrame extends JFrame implements Configuration {
     private GameListPanel gameListPanel;
+    private StatsPanel statsPanel;
 
     public AppFrame(){
 
@@ -45,8 +47,11 @@ public class AppFrame extends JFrame implements Configuration {
 
         pane.addTab("Live", gameTrackingPanel);
 
-        this.getContentPane().add(pane);
+        statsPanel = new StatsPanel();
+        JScrollPane paneStats = new JScrollPane(statsPanel);
+        pane.addTab("Stats", paneStats);
 
+        this.getContentPane().add(pane);
     }
 
     private void initMenuBar(GameTrackingPanel gameTrackingPanel) {
@@ -75,7 +80,8 @@ public class AppFrame extends JFrame implements Configuration {
     }
 
     @Override
-    public void updateGameList() {
+    public void updateComponents() {
         gameListPanel.update();
+        statsPanel.update();
     }
 }

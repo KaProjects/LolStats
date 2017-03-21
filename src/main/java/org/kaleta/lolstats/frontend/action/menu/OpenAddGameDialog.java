@@ -22,7 +22,7 @@ public class OpenAddGameDialog extends MenuAction{
         if (dialog.getResult()){
             Season.Game newGame = dialog.getGame();
             DataSourceService.addNewGame(newGame);
-            getConfiguration().updateGameList();
+            getConfiguration().updateComponents();
         }
     }
 }

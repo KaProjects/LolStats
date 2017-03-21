@@ -45,6 +45,7 @@ public class GameListPanel extends JPanel{
             JPanel panel = new JPanel();
             panel.setBorder(BorderFactory.createLineBorder(panel.getForeground()));
             panel.setBackground(Boolean.parseBoolean(game.getUserTeam().getWin()) ? Constants.PANEL_BACKGROUND_GREEN : Constants.PANEL_BACKGROUND_RED);
+            panel.setAlignmentX(0);
 
             GroupLayout layout = new GroupLayout(panel);
             panel.setLayout(layout);

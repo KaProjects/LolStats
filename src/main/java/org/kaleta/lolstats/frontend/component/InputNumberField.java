@@ -4,8 +4,7 @@ import org.kaleta.lolstats.frontend.common.NumberFilter;
 
 import javax.swing.*;
 import javax.swing.text.PlainDocument;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 
 /**
  * Created by Stanislav Kaleta on 12.03.2016.

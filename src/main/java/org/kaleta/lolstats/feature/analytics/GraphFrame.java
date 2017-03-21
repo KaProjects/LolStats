@@ -1,9 +1,7 @@
 package org.kaleta.lolstats.feature.analytics;
 
 import javax.swing.*;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 

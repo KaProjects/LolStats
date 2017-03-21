@@ -7,7 +7,7 @@ import org.kaleta.lolstats.backend.service.ServiceFailureException;
 import org.kaleta.lolstats.frontend.component.RecentGamePanel;
 
 import javax.swing.*;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;

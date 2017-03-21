@@ -5,16 +5,11 @@ import org.kaleta.lolstats.backend.entity.Player;
 import org.kaleta.lolstats.backend.entity.Role;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.backend.service.DataSourceService;
-import org.kaleta.lolstats.frontend.common.NumberFilter;
 import org.kaleta.lolstats.frontend.component.ComboBoxRenderer;
 import org.kaleta.lolstats.frontend.component.InputNumberField;
 
 import javax.swing.*;
-import javax.swing.text.PlainDocument;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;

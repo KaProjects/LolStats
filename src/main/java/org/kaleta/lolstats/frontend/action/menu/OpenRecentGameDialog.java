@@ -3,7 +3,7 @@ package org.kaleta.lolstats.frontend.action.menu;
 import org.kaleta.lolstats.frontend.Configuration;
 import org.kaleta.lolstats.frontend.dialog.AddRecentGameDialog;
 
-import java.awt.Component;
+import java.awt.*;
 
 /**
  * Created by Stanislav Kaleta on 22.02.2016.

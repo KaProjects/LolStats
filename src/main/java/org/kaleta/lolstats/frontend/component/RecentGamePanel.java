@@ -36,7 +36,7 @@ public class RecentGamePanel extends JPanel {
                     dialog.setVisible(true);
                     if (dialog.getResult()){
                         DataSourceService.addNewGame(dialog.getGame());
-                        ((Configuration) parent).updateGameList();
+                        ((Configuration) parent).updateComponents();
                         RecentGamePanel.this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
                         RecentGamePanel.this.setBackground(Color.LIGHT_GRAY);
                         RecentGamePanel.this.repaint();

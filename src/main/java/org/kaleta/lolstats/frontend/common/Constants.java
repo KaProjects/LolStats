@@ -1,8 +1,7 @@
 package org.kaleta.lolstats.frontend.common;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 
 /**
  * Created by Stanislav Kaleta on 26.09.2016.

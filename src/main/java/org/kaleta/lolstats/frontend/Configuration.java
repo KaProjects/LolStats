@@ -5,5 +5,5 @@ package org.kaleta.lolstats.frontend;
  */
 public interface Configuration {
 
-    void updateGameList();
+    void updateComponents();
 }

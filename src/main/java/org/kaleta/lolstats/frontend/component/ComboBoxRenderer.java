@@ -3,8 +3,7 @@ package org.kaleta.lolstats.frontend.component;
 import org.kaleta.lolstats.frontend.common.IconLoader;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Component;
+import java.awt.*;
 
 /**
  * Created by Stanislav Kaleta on 05.03.2016.
