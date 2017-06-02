@@ -13,6 +13,7 @@ import java.io.IOException;
  */
 public class IconLoader {
     public static final String NO_ICON = "/icons/def/no_icon.png";
+    public static final String LOGO = "/icons/def/logo.png";
 
     public static ImageIcon getChampIcon(String name) {
         String path = "/icons/champion/" + name.replace(" ","").replace("'","").replace(".","").toLowerCase() + ".png";
@@ -24,9 +25,18 @@ public class IconLoader {
         return loadIcon(path,role.toString(), new Dimension(30,30));
     }
 
+    public static ImageIcon getTierIcon(String name, Dimension size) {
+        String path = "/icons/tier/" + name + ".png";
+        return loadIcon(path,name, size);
+    }
+
     public static ImageIcon getTierIcon(String name) {
         String path = "/icons/tier/" + name + ".png";
         return loadIcon(path,name, null);
+    }
+
+    public static ImageIcon getIcon(String path){
+        return loadIcon(path, null, null);
     }
 
     private static ImageIcon loadIcon(String path, String description, Dimension size) {

@@ -2,6 +2,7 @@ package org.kaleta.lolstats.frontend;
 
 import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.action.menu.*;
+import org.kaleta.lolstats.frontend.common.IconLoader;
 import org.kaleta.lolstats.frontend.common.MenuItemWrapper;
 import org.kaleta.lolstats.frontend.component.GameListPanel;
 import org.kaleta.lolstats.frontend.component.GameTrackingPanel;
@@ -36,6 +37,7 @@ public class AppFrame extends JFrame implements Configuration {
         this.setLocation(centerPosX, centerPosY);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle(Initializer.NAME +" - "+ Initializer.VERSION+" - "+DataSourceService.getLolApiConfig().getNick());
+        this.setIconImage(IconLoader.getIcon(IconLoader.LOGO).getImage());
     }
 
     private void initComponents(JPanel gameTrackingPanel){

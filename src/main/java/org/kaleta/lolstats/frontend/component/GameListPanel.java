@@ -3,8 +3,10 @@ package org.kaleta.lolstats.frontend.component;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.backend.service.DataSourceService;
 import org.kaleta.lolstats.frontend.common.Constants;
+import org.kaleta.lolstats.frontend.common.IconLoader;
 
 import javax.swing.*;
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -41,6 +43,13 @@ public class GameListPanel extends JPanel{
             JLabel labelScore = getLabel(String.format("%02d", Integer.parseInt(game.getUser().getScore().getKills()))
                     + " : " + String.format("%02d", Integer.parseInt(game.getUser().getScore().getDeaths()))
                     + " : " + String.format("%02d", Integer.parseInt(game.getUser().getScore().getAssists())));
+            JLabel labelLp = getLabel(game.getRank().getLp());
+            labelLp.setHorizontalAlignment(SwingConstants.TRAILING);
+            JLabel labelTier = new JLabel(IconLoader.getTierIcon(game.getRank().getTier(), new Dimension(20,20)));
+            JLabel labelDivision = getLabel(game.getRank().getDivision());
+            labelDivision.setHorizontalAlignment(SwingConstants.TRAILING);
+
+
 
             JPanel panel = new JPanel();
             panel.setBorder(BorderFactory.createLineBorder(panel.getForeground()));
@@ -55,12 +64,19 @@ public class GameListPanel extends JPanel{
                     .addComponent(labelDate,110,110,110)
                     .addComponent(labelChamp,100,100,100)
                     .addComponent(labelScore,100,100,100)
+                    .addComponent(labelLp,30,30,30)
+                    .addGap(2)
+                    .addComponent(labelDivision,15,15,15)
+                    .addComponent(labelTier,30,30,30)
                     .addGap(10));
             layout.setVerticalGroup(layout.createParallelGroup()
                     .addComponent(labelGameNumber)
                     .addComponent(labelDate)
                     .addComponent(labelChamp)
-                    .addComponent(labelScore));
+                    .addComponent(labelScore)
+                    .addComponent(labelLp)
+                    .addComponent(labelDivision)
+                    .addComponent(labelTier));
 
             this.add(panel);
         }
