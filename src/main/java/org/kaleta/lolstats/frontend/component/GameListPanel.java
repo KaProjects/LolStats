@@ -45,7 +45,7 @@ public class GameListPanel extends JPanel{
                     + " : " + String.format("%02d", Integer.parseInt(game.getUser().getScore().getAssists())));
             JLabel labelLp = getLabel(game.getRank().getLp());
             labelLp.setHorizontalAlignment(SwingConstants.TRAILING);
-            JLabel labelTier = new JLabel(IconLoader.getTierIcon(game.getRank().getTier(), new Dimension(20,20)));
+            JLabel labelTier = new JLabel(IconLoader.getTierIcon(game.getRank().getTier().toLowerCase(), new Dimension(20,20)));
             JLabel labelDivision = getLabel(game.getRank().getDivision());
             labelDivision.setHorizontalAlignment(SwingConstants.TRAILING);
 
