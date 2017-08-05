@@ -1,6 +1,6 @@
 package org.kaleta.lolstats.frontend.component;
 
-import org.kaleta.lolstats.backend.entity.GameInfo;
+import org.kaleta.lolstats.backend.entity.GameIdentifier;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.backend.service.LolApiService;
 import org.kaleta.lolstats.backend.service.ServiceFailureException;
@@ -73,14 +73,13 @@ public class GameTrackingPanel extends JPanel{
 
         while (working) {
             try {
-                List<GameInfo> infoList = service.getRecentRankedGamesInfo();
+                List<GameIdentifier> infoList = service.getRecentRankedGamesInfo();
                 for (int i = infoList.size() - 1; i >= 0; i--) {
-                    GameInfo info = infoList.get(i);
+                    GameIdentifier info = infoList.get(i);
                     if (Long.parseLong(info.getDateInMillis()) > startTime) {
                         if (!gameIds.contains(info.getId())){
-                            Season.Game game = service.getGameById(info.getId(),true);
                             gameIds.add(info.getId());
-                            panelFoundGames.add(new RecentGamePanel(game, parent));
+                            panelFoundGames.add(new RecentGamePanel(info, parent));
                             panelFoundGames.repaint();
                             panelFoundGames.revalidate();
                             Toolkit.getDefaultToolkit().beep();

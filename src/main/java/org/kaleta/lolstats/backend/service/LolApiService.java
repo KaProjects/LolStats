@@ -2,7 +2,7 @@ package org.kaleta.lolstats.backend.service;
 
 import org.eclipse.jetty.util.ajax.JSON;
 import org.kaleta.lolstats.backend.entity.Config;
-import org.kaleta.lolstats.backend.entity.GameInfo;
+import org.kaleta.lolstats.backend.entity.GameIdentifier;
 import org.kaleta.lolstats.backend.entity.Player;
 import org.kaleta.lolstats.backend.entity.Season;
 import org.kaleta.lolstats.frontend.ErrorDialog;
@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Stanislav Kaleta on 11.02.2016.
@@ -25,14 +26,14 @@ import java.util.List;
  */
 public class LolApiService {
     private final String recentMatchUrl;
-    private final String champByIdUrl;
+    //private final String champByIdUrl;
     private final String matchByIdUrl;
     private final String matchListUrl;
-    private final String champListUrl;
 
     private final String playerId;
+    private final String accountId;
     private Object[] allPlayerMatches;
-    private HashMap<String,String> champsMap;
+    private static Map<Integer, String> champsMap;
 
     public LolApiService() {
         //todo ectract this to api manager
@@ -40,22 +41,31 @@ public class LolApiService {
         String region = apiConfig.getRegion();
         String apiKey = apiConfig.getAccessKey();
         String playerNick = apiConfig.getNick();
-        String protocol = "https://";
-        String domain = region + ".api.pvp.net";
-        String keyParameter = "?api_key=" + apiKey;
-        String sumByNamePath = "/api/lol/"+region+"/v1.4/summoner/by-name/";
-        HashMap players = loadData(protocol + domain + sumByNamePath + playerNick + keyParameter);
-        playerId = String.valueOf(((HashMap)players.get(playerNick.toLowerCase().replace(" ",""))).get("id"));
 
-        recentMatchUrl = protocol + domain + "/api/lol/" + region + "/v1.3/game/by-summoner/" + playerId + "/recent" + keyParameter;
-        champByIdUrl = protocol + "global.api.pvp.net" + "/api/lol/static-data/" + region + "/v1.2/champion/" + "{ID}" + keyParameter;
-        matchByIdUrl = protocol + domain + "/api/lol/" + region + "/v2.2/match/{ID}" + keyParameter;
+        String protocol = "https://";
+        String domain = region + ".api.riotgames.com";
+        String keyParameter = "?api_key=" + apiKey;
+
+        Initializer.LOG.info("getting info for player: " + loadData(protocol + domain + "/lol/summoner/v3/summoners/by-name/" + playerNick + keyParameter));
+        HashMap playerInfo = loadData(protocol + domain + "/lol/summoner/v3/summoners/by-name/" + playerNick + keyParameter);
+        playerId = String.valueOf(playerInfo.get("id"));
+        accountId = String.valueOf(playerInfo.get("accountId"));
+
+        recentMatchUrl = protocol + domain + "/lol/match/v3/matchlists/by-account/" + accountId + "/recent" + keyParameter;
+        matchByIdUrl = protocol + domain + "/lol/match/v3/matches/{matchId}" + keyParameter;
+        //champByIdUrl = protocol + domain + "/lol/static-data/v3/champions/{id}" + keyParameter;
+        if (champsMap == null) {
+            champsMap = loadChampionMap(protocol + domain + "/lol/static-data/v3/champions" + keyParameter);
+        }
+
+        // TODO: 4.8.2017 not updated to v3 api !!
         matchListUrl = protocol + domain + "/api/lol/" + region + "/v2.2/matchlist/by-summoner/" + playerId + keyParameter;
-        champListUrl = protocol + domain + "/api/lol/" + region + "/v1.2/champion" + keyParameter;
+
     }
 
     private HashMap loadData(String url){
         int retryCounter = 0;
+        Exception lastException = null;
         while (retryCounter < 60){
             try {
                 URLConnection connection = new URL(url).openConnection();
@@ -72,9 +82,14 @@ public class LolApiService {
                         if (retryCounter < 10){
                             Thread.sleep(1000);
                         } else {
-                            Thread.sleep(2000);
+                            if (retryCounter < 30) {
+                                Thread.sleep(2000);
+                            } else {
+                                Thread.sleep(5000);
+                            }
                         }
                     } catch (InterruptedException e1) {}
+                    lastException = e;
                     retryCounter++;
                 } else {
                     Initializer.LOG.warning(ErrorDialog.getExceptionStackTrace(e));
@@ -82,26 +97,24 @@ public class LolApiService {
                 }
             }
         }
-        String msg = "time-out longer than 60 seconds!";
+        String msg = "time-out longer than 60 seconds! Last Cause: " + lastException.getMessage();
         Initializer.LOG.warning(msg);
-        throw new ServiceFailureException(msg);
+        lastException.printStackTrace();
+        throw new ServiceFailureException(msg, lastException);
     }
 
     /**
      * TODO doc.
      */
-    public List<GameInfo> getRecentRankedGamesInfo() {
-        Object[] recentGames = (Object[]) loadData(recentMatchUrl).get("games");
-        List<GameInfo> retrievedInfos = new ArrayList<>();
+    public List<GameIdentifier> getRecentRankedGamesInfo() {
+        Object[] recentGames = (Object[]) loadData(recentMatchUrl).get("matches");
+        List<GameIdentifier> retrievedInfos = new ArrayList<>();
         for (int i = 0; i < recentGames.length; i++) {
-            if ((((HashMap) recentGames[i]).get("subType")).equals("RANKED_SOLO_5x5")) {
-                GameInfo info = new GameInfo();
+            if (String.valueOf(((HashMap) recentGames[i]).get("queue")).equals("420")) {
+                GameIdentifier info = new GameIdentifier();
                 info.setId(String.valueOf(((HashMap)recentGames[i]).get("gameId")));
-                info.setDateInMillis(String.valueOf(((HashMap)recentGames[i]).get("createDate")));
-                info.setWin(String.valueOf(((HashMap)((HashMap)recentGames[i]).get("stats")).get("win")));
-                info.setK(String.valueOf(((HashMap)((HashMap)recentGames[i]).get("stats")).get("championsKilled")));
-                info.setD(String.valueOf(((HashMap)((HashMap)recentGames[i]).get("stats")).get("numDeaths")));
-                info.setA(String.valueOf(((HashMap)((HashMap)recentGames[i]).get("stats")).get("assists")));
+                info.setDateInMillis(String.valueOf(((HashMap)recentGames[i]).get("timestamp")));
+                info.setChampion(champsMap.get(Integer.parseInt(String.valueOf(((HashMap)recentGames[i]).get("champion")))));
                 retrievedInfos.add(info);
             }
         }
@@ -111,26 +124,14 @@ public class LolApiService {
     /**
      * TODO doc.
      */
-    public Season.Game getGameById(String gameId, boolean singleGameRequest){
-        if (!singleGameRequest){
-            if (champsMap == null){
-                champsMap = new HashMap<>();
-                Object[] champList = (Object[]) loadData(champListUrl).get("champions");
-                for (Object champ : champList){
-                    String id = String.valueOf(((HashMap) champ).get("id"));
-                    HashMap champInfo = loadData(champByIdUrl.replace("{ID}",id));
-                    champsMap.put(id, String.valueOf(champInfo.get("name")));
-                }
-            }
-        }
-
+    public Season.Game getGameById(String gameId){
         Season.Game gameOutput = new Season.Game();
-        HashMap gameData = loadData(matchByIdUrl.replace("{ID}",gameId));
+        HashMap gameData = loadData(matchByIdUrl.replace("{matchId}",gameId));
 
-        String date = new SimpleDateFormat("ddMMyyyy").format(gameData.get("matchCreation"));
+        String date = new SimpleDateFormat("ddMMyyyy").format(gameData.get("gameCreation"));
         gameOutput.setDate(date);
 
-        String duration = new SimpleDateFormat("mmss").format(((Long)gameData.get("matchDuration"))*1000);
+        String duration = new SimpleDateFormat("mmss").format(((Long)gameData.get("gameDuration"))*1000);
         gameOutput.setLength(duration);
 
         long userId = -1;
@@ -191,7 +192,7 @@ public class LolApiService {
         gameOutput.getUserTeam().setFirstBlood(String.valueOf(userTeam.get("firstBlood")));
         gameOutput.getUserTeam().setInhibitors(String.valueOf(userTeam.get("inhibitorKills")));
         gameOutput.getUserTeam().setTurrets(String.valueOf(userTeam.get("towerKills")));
-        gameOutput.getUserTeam().setWin(String.valueOf(userTeam.get("winner")));
+        gameOutput.getUserTeam().setWin(String.valueOf(String.valueOf(userTeam.get("win")).equals("Win")));
 
         HashMap opponentTeam = (HashMap)((Object[])gameData.get("teams"))[((userTeamIndex + 1) % 2)];
 
@@ -200,7 +201,7 @@ public class LolApiService {
         gameOutput.getEnemyTeam().setFirstBlood(String.valueOf(opponentTeam.get("firstBlood")));
         gameOutput.getEnemyTeam().setInhibitors(String.valueOf(opponentTeam.get("inhibitorKills")));
         gameOutput.getEnemyTeam().setTurrets(String.valueOf(opponentTeam.get("towerKills")));
-        gameOutput.getEnemyTeam().setWin(String.valueOf(opponentTeam.get("winner")));
+        gameOutput.getEnemyTeam().setWin(String.valueOf(String.valueOf(opponentTeam.get("win")).equals("Win")));
 
         HashMap userStats = (HashMap) user.get("stats");
 
@@ -216,15 +217,11 @@ public class LolApiService {
         gameOutput.getUser().getDmg().setToChamps(String.valueOf(userStats.get("totalDamageDealtToChampions")));
         gameOutput.getUser().getWard().setPlaced(String.valueOf(userStats.get("wardsPlaced")));
         gameOutput.getUser().getWard().setDestroyed(String.valueOf(userStats.get("wardsKilled")));
-        if (singleGameRequest){
-            gameOutput.getUser().setChamp(String.valueOf(loadData(champByIdUrl.replace("{ID}",String.valueOf(user.get("championId")))).get("name")));
-        } else {
-            gameOutput.getUser().setChamp(champsMap.get(String.valueOf(user.get("championId"))));
-        }
-        gameOutput.getUser().setFarm(String.valueOf(((long) userStats.get("minionsKilled") + (long) userStats.get("neutralMinionsKilled"))));
+        gameOutput.getUser().setChamp(champsMap.get(Integer.parseInt(String.valueOf(user.get("championId")))));
+        gameOutput.getUser().setFarm(String.valueOf(((long) userStats.get("totalMinionsKilled") + (long) userStats.get("neutralMinionsKilled"))));
         gameOutput.getUser().setGold(String.valueOf(userStats.get("goldEarned")));
         gameOutput.getUser().setFb(String.valueOf(userStats.get("firstBloodKill")));
-        gameOutput.getUser().setTurrets(String.valueOf(userStats.get("towerKills")));
+        gameOutput.getUser().setTurrets(String.valueOf(userStats.get("turretKills")));
         gameOutput.getUser().setRole(((HashMap)user.get("timeline")).get("lane") +" "+((HashMap)user.get("timeline")).get("role"));
 
         for (HashMap userMate : userMates){
@@ -243,15 +240,11 @@ public class LolApiService {
             player.getDmg().setToChamps(String.valueOf(userMateStats.get("totalDamageDealtToChampions")));
             player.getWard().setPlaced(String.valueOf(userMateStats.get("wardsPlaced")));
             player.getWard().setDestroyed(String.valueOf(userMateStats.get("wardsKilled")));
-            if (singleGameRequest){
-                player.setChamp(String.valueOf(loadData(champByIdUrl.replace("{ID}",String.valueOf(userMate.get("championId")))).get("name")));
-            } else {
-                player.setChamp(champsMap.get(String.valueOf(userMate.get("championId"))));
-            }
-            player.setFarm(String.valueOf(((long) userMateStats.get("minionsKilled") + (long) userMateStats.get("neutralMinionsKilled"))));
+            player.setChamp(champsMap.get(Integer.parseInt(String.valueOf(userMate.get("championId")))));
+            player.setFarm(String.valueOf(((long) userMateStats.get("totalMinionsKilled") + (long) userMateStats.get("neutralMinionsKilled"))));
             player.setGold(String.valueOf(userMateStats.get("goldEarned")));
             player.setFb(String.valueOf(userMateStats.get("firstBloodKill")));
-            player.setTurrets(String.valueOf(userMateStats.get("towerKills")));
+            player.setTurrets(String.valueOf(userMateStats.get("turretKills")));
             player.setRole(((HashMap)userMate.get("timeline")).get("lane") +" "+((HashMap)userMate.get("timeline")).get("role"));
             gameOutput.getUserMate().add(player);
         }
@@ -273,15 +266,11 @@ public class LolApiService {
             player.getDmg().setToChamps(String.valueOf(opponentStats.get("totalDamageDealtToChampions")));
             player.getWard().setPlaced(String.valueOf(opponentStats.get("wardsPlaced")));
             player.getWard().setDestroyed(String.valueOf(opponentStats.get("wardsKilled")));
-            if (singleGameRequest){
-                player.setChamp(String.valueOf(loadData(champByIdUrl.replace("{ID}",String.valueOf(opponent.get("championId")))).get("name")));
-            } else {
-                player.setChamp(champsMap.get(String.valueOf(opponent.get("championId"))));
-            }
-            player.setFarm(String.valueOf(((long) opponentStats.get("minionsKilled") + (long) opponentStats.get("neutralMinionsKilled"))));
+            player.setChamp(champsMap.get(Integer.parseInt(String.valueOf(opponent.get("championId")))));
+            player.setFarm(String.valueOf(((long) opponentStats.get("totalMinionsKilled") + (long) opponentStats.get("neutralMinionsKilled"))));
             player.setGold(String.valueOf(opponentStats.get("goldEarned")));
             player.setFb(String.valueOf(opponentStats.get("firstBloodKill")));
-            player.setTurrets(String.valueOf(opponentStats.get("towerKills")));
+            player.setTurrets(String.valueOf(opponentStats.get("turretKills")));
             player.setRole(((HashMap)opponent.get("timeline")).get("lane") +" "+((HashMap)opponent.get("timeline")).get("role"));
             gameOutput.getOpponent().add(player);
         }
@@ -313,7 +302,7 @@ public class LolApiService {
                     if (date.equals("")){
                         long matchId = (long) ((HashMap) allPlayerMatches[g]).get("matchId");
                         try {
-                            Season.Game game = getGameById(String.valueOf(matchId),false);
+                            Season.Game game = getGameById(String.valueOf(matchId));
                             outputGames.add(game);
                         } catch (Exception e){
                             Season.Game errGame = new Season.Game();
@@ -324,7 +313,7 @@ public class LolApiService {
                     } else {
                         if (date.equals(new SimpleDateFormat("ddMMyyyy").format(((HashMap) allPlayerMatches[g]).get("timestamp")))) {
                             long matchId = (long) ((HashMap) allPlayerMatches[g]).get("matchId");
-                            Season.Game game = getGameById(String.valueOf(matchId),false);
+                            Season.Game game = getGameById(String.valueOf(matchId));
                             outputGames.add(game);
                         }
                     }
@@ -334,19 +323,18 @@ public class LolApiService {
         return outputGames;
     }
 
-    /**
-     * TODO doc.
-     */
-    public List<String> getChampionList(){
-        if (champsMap == null){
-            champsMap = new HashMap<>();
-            Object[] champList = (Object[]) loadData(champListUrl).get("champions");
-            for (Object champ : champList){
-                String id = String.valueOf(((HashMap) champ).get("id"));
-                HashMap champInfo = loadData(champByIdUrl.replace("{ID}",id));
-                champsMap.put(id, String.valueOf(champInfo.get("name")));
-            }
+    public Map<Integer, String> getChampionMap(){
+        return champsMap;
+    }
+
+    private Map<Integer, String> loadChampionMap(String champListUrl){
+        Map<Integer, String> champMap = new HashMap<>();
+        HashMap champData = (HashMap) loadData(champListUrl).get("data");
+        for (Object champ : champData.values()){
+            Integer id = Integer.parseInt(String.valueOf(((HashMap) champ).get("id")));
+            String name = String.valueOf(((HashMap) champ).get("name"));
+            champMap.put(id, name);
         }
-        return new ArrayList<>(champsMap.values());
+        return champMap;
     }
 }

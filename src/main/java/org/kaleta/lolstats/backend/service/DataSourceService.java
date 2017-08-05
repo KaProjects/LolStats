@@ -37,7 +37,7 @@ public class DataSourceService {
             ConfigManager manager = new JaxbConfigManager();
             Config config =  manager.retrieveConfig();
             config.getChamps().getChamp().clear();
-            for (String champName : new LolApiService().getChampionList()){
+            for (String champName : new LolApiService().getChampionMap().values()){
                 Config.Champs.Champ champ = new Config.Champs.Champ();
                 champ.setName(champName);
                 config.getChamps().getChamp().add(champ);
